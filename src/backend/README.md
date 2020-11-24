@@ -2,7 +2,7 @@
 
 ## Server instantiation 
 
-From a bash terminal, run the command
+From a bash terminal, run the command:
 
 ```bash
 $ env FLASK_APP=helloworld.py flask run
