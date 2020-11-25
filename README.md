@@ -24,8 +24,7 @@ Pre-analisi/estrazione delle informazioni fondamentali dalla traccia audio:
 Tutte le informazioni sono elaborate in back end per cercare di ottimizzare l’aspetto real time della visualizzazione tramite js. 
 Forniamo a Js le informazioni estratte in una serie di array  da interpretare durante la riproduzione della traccia musicale. Come fare per sincronizzare la lettura degli array da parte di JS con la riproduzione audio?
 
-### Fronted (Javascript)
-
+### Frontend (Javascript)
 Visualizzare in maniera diversa:
 * Tempo: Associato a pulsazioni dello sfondo
 * Ritmo: Possono esserci diversi ritmi, ogni ritmo sarà associato ad una figura geometrica. Esse appariranno e pulseranno seguendo il relativo ritmo.
@@ -35,8 +34,8 @@ Visualizzare in maniera diversa:
 Texture di fondo da selezionare in base al pezzo.
 
 ## Miscellaneous ideas
-
 * Kaleidoscope
+* Simulation of ink in water
 * Generative art (https://p5js.org/reference/#/libraries/p5.sound)
 * p5.js Documentation (https://p5js.org/reference/#/libraries/p5.sound)
 
