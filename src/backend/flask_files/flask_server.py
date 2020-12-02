@@ -9,8 +9,8 @@ def upload():
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
    if request.method == 'POST':
-      f = request.files['file']
-      f.save(secure_filename(f.filename))
+      f = request.files['file']                #this is the uploaded file
+      f.save(secure_filename(f.filename))      #save the uploaded file in the current directory
       return 'file uploaded successfully'
 		
 if __name__ == '__main__':
