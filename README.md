@@ -22,7 +22,7 @@ Pre-analysis/extration  of information from the audio track:
 * Frequencies (spectrogram and cromagram)
 
 All information is extracted in the backend in order to optimize the realtime aspect of the visualization in javascript.
-We give to the javascript frontend all the extracted information in a series of arrays/matrices that are interpreted simultaneously to the playback of the musical piece. We have to sync the arrays with the audio playback.
+We give to the javascript frontend all the extracted information in a series of arrays/matrices (Json format) that are interpreted simultaneously to the playback of the musical piece. We have to sync the arrays with the audio playback.
 
 ### Frontend (Javascript)
 Visualize in a different way:
