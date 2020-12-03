@@ -15,23 +15,23 @@ Python and Javascript are integrated using Flask (see https://flask.palletsproje
 
 
 ### Backend (Python)
-Pre-analisi/estrazione delle informazioni fondamentali dalla traccia audio:
+Pre-analysis/extration  of information from the audio track:
 * Tempo (tempogram)
-* Ritmo (matrice poliritmica)
-* Armonia
-* Frequenze (spectrogram)
+* Rhythm (polyrhythmic matrix)
+* Harmony
+* Frequencies (spectrogram and cromagram)
 
-Tutte le informazioni sono elaborate in back end per cercare di ottimizzare l’aspetto real time della visualizzazione tramite js. 
-Forniamo a Js le informazioni estratte in una serie di array  da interpretare durante la riproduzione della traccia musicale. Come fare per sincronizzare la lettura degli array da parte di JS con la riproduzione audio?
+All information is extracted in the backend in order to optimize the realtime aspect of the visualization in javascript.
+We give to the javascript frontend all the extracted information in a series of arrays/matrices that are interpreted simultaneously to the playback of the musical piece. We have to sync the arrays with the audio playback.
 
 ### Frontend (Javascript)
-Visualizzare in maniera diversa:
-* Tempo: Associato a pulsazioni dello sfondo
-* Ritmo: Possono esserci diversi ritmi, ogni ritmo sarà associato ad una figura geometrica. Esse appariranno e pulseranno seguendo il relativo ritmo.
-* Analisi Armonica: colore dello sfondo e di altri elementi. Possibile interpretazione geometrica dei modi (minore/maggiore).
-* Frequenze/Spettro: lo spettro delle frequenze influenza altri elementi grafici generici (es saturazione di una parte del video)
+Visualize in a different way:
+* Tempo: Associated to pulsations of the background
+* Rhythm: There can be more than one rhythm. Each rhythm can be associated to a different geometric figure. They appear and pulsate following their relative rhythm
+* Harmonic Analysis: color of the background and of other elements. Possible geometric interpretation of the modes (minor/major/etc.)
+* Frequencies/Spectrum: the frequency spectrum influences other generic graphical elements (e.g. saturation of a part of a video)
 
-Texture di fondo da selezionare in base al pezzo.
+Background texture to be selected based on the musical piece.
 
 ## Miscellaneous ideas
 * Kaleidoscope
