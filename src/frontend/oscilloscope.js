@@ -1,15 +1,14 @@
  
 /* referance: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API */
-//var audioCtx = new (window.AudioContext || window.webkitAudioContext);
-//const AudioContext = require("web-audio-engine").StreamAudioContext;
+
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-///*  */
+
 
 c = new AudioContext(); 
 o = c.createOscillator(); 
 canvas = document.querySelector("canvas"); 
-ctx = canvas.getContext("2D"); 
+var ctx = canvas.getContext("2d"); 
 a = c.createAnalyser(); 
 
 
@@ -19,7 +18,7 @@ audioElement.crossOrigin = "anonymous";
 var source = c.createMediaElementSource(audioElement);
 // connecting the source to the AudioC. destination  just to play it 
 
-source.connect(c.destination);
+//source.connect(c.destination);
 
 // select our play button
 const playButton = document.querySelector('button');
@@ -50,45 +49,46 @@ audioElement.addEventListener('ended', () => {
 // o.start();
 
 // To extract data from your audio source, you need an AnalyserNode
-// var analyser = c.createAnalyser();
+var analyser = c.createAnalyser();
 // i have to connet this node to the source
 source.connect(analyser);
 // and then connect my analyser to the Audio destination
 analyser.connect(c.destination);
 
 // to capture frequency data of the audio source
+analyser.fftSize = 2048;
 var bufferLength = analyser.frequencyBinCount;
-var dataFreqsArray = new Float32Array(bufferLength); // Float32Array
-void analyser.getFloatFrequencyData(dataFreqsArray); // fill the Float32Array with data returned from getFloatFrequencyData()
+var dataArray = new Uint8Array(bufferLength); // Float32Array
+//void analyser.getFloatFrequencyData(dataArray); // fill the Float32Array with data returned from getFloatFrequencyData()
 //The getFloatFrequencyData() method of the AnalyserNode Interface copies the current frequency data into a Float32Array array passed into it.Each item in the array represents the decibel value for a specific frequency.
 
-// create the canvas
-ctx.clearRect(0, 0, 100, 100);
+// cleaning the canvas
+ctx.clearRect(0, 0, 1000, 350);
 
 function draw() {
   // to keep repeating the drawing function once it has been started
   var drawVisual = requestAnimationFrame(draw);
   // get the time domain data and copy to the array
-  analyser.getByteTimeDomainData(dataFreqsArray);
+  analyser.getByteTimeDomainData(dataArray);
   //fill the canvas with a starting color
-  ctx.fillStyle = "rgb(200,200,200)";
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = "rgb(250,250,200)";
+  ctx.fillRect(0, 0, 1000, 350);
 
   // seting some parameters of the line to draw
-  ctx.lineWight = 2;
+  ctx.lineWight = 3;
   ctx.strokeStyle = "rgb(0,0,0)";
   ctx.beginPath();
   //Determine the width of each segment of the line to be drawn by dividing the canvas width by the array length
-  var sliceWidth = (width * 1.0) / bufferLength;
-  var x = 0;
+  var sliceWidth = (1000 * 1.0) / bufferLength;
+  var x = 0; 
 
   //Now we run through a loop, defining the position of a small segment of the wave for each point in the buffer at a certain height based on the data point value form the array, then moving the line across to the place where the next wave segment should be drawn:
   for (var i = 0; i < bufferLength; i++) {
     var v = dataArray[i] / 128.0;
-    var y = (v * HEIGHT) / 2;
+    var y = (v * 350) / 2;
 
     if (i === 0) {
-      cx.moveTo(x, y);
+      ctx.moveTo(x, y);
     } else {
       ctx.lineTo(x, y);
     }

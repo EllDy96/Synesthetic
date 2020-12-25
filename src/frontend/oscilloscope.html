@@ -7,20 +7,21 @@
     <title>Oscilloscope</title>
     <link rel="stylesheet" href="oscilloscope.css">
   </head>
-  
-  <h1> Our first Oscilloscope</h1>
-  <body>
-    <canvas width=1000 height=350 style="border: 1px solid black"></canvas>
 
-    <audio id=AudioSurce>
-      <source src="La_La_Land_City_of_Stars_Lofi_Hip_Hop_Version.MP3" />
-    
-      Your browser does not support the audio tag.
-    </audio>
-    <button data-playing="false" role="switch" aria-checked="false">
-      <span>Play/Pause</span>
-    </button>
-   <!-- ctrl+ u to comment a line  -->
-   <script src="oscilloscope.js"></script> 
-  </body> 
+    <div id='oscilloscopio'>
+      <h1 class= 'title'> Our first Oscilloscope</h1>
+      <body>
+        <canvas width=1000 height=350 style="border: 5px solid burlywood"></canvas>
+
+        <audio id=AudioSurce>
+          <source src="La_La_Land_City_of_Stars_Lofi_Hip_Hop_Version.MP3" />
+        
+          Your browser does not support the audio tag.
+        </audio>
+        <button id='OnButton' data-playing="false" role="switch" aria-checked="false">
+        Play/Pause
+        </button>
+      <script src="oscilloscope.js"></script> 
+    </div>
+ </body> 
 </html>
