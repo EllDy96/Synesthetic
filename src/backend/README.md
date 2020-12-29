@@ -14,3 +14,9 @@ Expected output:
  * Serving Flask app "helloworld"
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
  ```
+
+ 1) activate Flask environment
+ 2) run "flask_server2.py"
+ 3) select a track to upload from your pc
+ 4) you will be redirect to the oscillator
+ 5) write "/metronomo" in the search bar in order to see a metronome @ 60 BPM
