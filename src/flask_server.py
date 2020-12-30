@@ -26,7 +26,7 @@ def upload_file():
 def send_track(filename):
    return send_from_directory("uploaded_tracks", filename)
 
-@app.route('/metronomo')
+@app.route('/metronome')
 def canvas():
-   return render_template ('p5_sketch.html')   
+   return render_template ('metronome.html')   
 
