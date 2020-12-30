@@ -20,3 +20,15 @@ Expected output:
  3) select a track to upload from your pc
  4) you will be redirect to the oscillator
  5) write "/metronomo" in the search bar in order to see a metronome @ 60 BPM
+
+REFERENCES LIST:
+file uploads with Flask 
+link: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+
+manage static files in Flask
+link: https://www.youtube.com/watch?v=tXpFERibRaU
+
+routing method for reaching elements not in static directory (which is a Flask pre-routed path)
+link: https://www.youtube.com/watch?v=Y2fMCxLz6wM&list=LL&index=1
+
+
