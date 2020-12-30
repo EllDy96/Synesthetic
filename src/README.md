@@ -32,3 +32,8 @@ routing method for reaching elements not in static directory (which is a Flask p
 link: https://www.youtube.com/watch?v=Y2fMCxLz6wM&list=LL&index=1
 
 
+# Frontend
+All the templates of the project are moved to the frontend part
+
+Animations with p5.js (metronome example)
+link: https://compform.net/animation/

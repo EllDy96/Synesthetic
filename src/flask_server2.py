@@ -2,8 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 
-template_dir = os.path.relpath('../frontend/templates') #reference template
-app= Flask(__name__, template_folder=template_dir)
+template_dir = os.path.relpath('./templates') #reference template
+app= Flask(__name__)#, template_folder=template_dir)
 app.config['MAX_CONTENT_LENGTH']=20*1024*1024 #fix the max size of the uploaded files at 20MB
 app.config['UPLOAD_EXTENSIONS']=['.mp3', '.wav', '.flac']
 app.config['UPLOAD_PATH']='uploaded_tracks'
