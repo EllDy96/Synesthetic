@@ -32,8 +32,15 @@ routing method for reaching elements not in static directory (which is a Flask p
 link: https://www.youtube.com/watch?v=Y2fMCxLz6wM&list=LL&index=1
 
 
-# Frontend
-All the templates of the project are moved to the frontend part
-
 Animations with p5.js (metronome example)
 link: https://compform.net/animation/
+
+Molinari notes:
+# Da js facciamo richieste HTTP
+# Richiesta POST su server
+# qua potrete trovare un esempio di un semplice HTTP 
+# server scritto in Python che accetta chiamate GET e POST da un client che fa richieste su 
+# http://localhost:8080. Quindi voi dovreste scrivere la parte client come sapete fare e, 
+# quando avrete bisogno di fare un chiamata al server (per esempio per chiedere di processare un segnale), 
+# fare da Javascript una chiamata POST al server sulla porta 8080 contenente i dati che il server necessita 
+# e aspettare la sua risposta (il segnale processato).

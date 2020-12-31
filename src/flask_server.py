@@ -2,13 +2,13 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 
-template_dir = os.path.relpath('./templates') #reference template
+#template_dir = os.path.relpath('./templates') #reference template, in case you want to change the standard path
 app= Flask(__name__)#, template_folder=template_dir)
 app.config['MAX_CONTENT_LENGTH']=20*1024*1024 #fix the max size of the uploaded files at 20MB
 app.config['UPLOAD_EXTENSIONS']=['.mp3', '.wav', '.flac']
 app.config['UPLOAD_PATH']='uploaded_tracks'
-@app.route('/')
-def upload():
+@app.route('/')         #collegamento tra ('percorso url') e ...                        
+def upload():           #... funzione view
    return render_template('upload.html')
 	
 @app.route('/', methods = ['POST'])
@@ -30,3 +30,14 @@ def send_track(filename):
 def canvas():
    return render_template ('metronome.html')   
 
+#@app.route('/admin')            #just an example on how redirecting works in Flask(un utente non può finire su pagina /admin)
+#def admin():
+#    return redirect(url_for("home"))
+
+#@app.route('/<name>')           #just a simple example of extracting url stuff and write it into web page
+#def user(name):
+#    return f"Hello {name}!"
+
+#@app.route('/<name>')            #render an html template. In order to do that, create a "template" folder in the same directory of the current flask.py file
+#def page(name):                  #passing html template a list, then use python inside html
+#    return render_template("index.html", content=["Francesco Bruschi","Mauro Molinari", "Vincenzo Rana"], title=name) 
