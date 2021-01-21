@@ -1,4 +1,5 @@
 import os
+from python_modules import periodicity_finder as pf
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -7,6 +8,7 @@ app= Flask(__name__)#, template_folder=template_dir)
 app.config['MAX_CONTENT_LENGTH']=20*1024*1024 #fix the max size of the uploaded files at 20MB
 app.config['UPLOAD_EXTENSIONS']=['.mp3', '.wav', '.flac']
 app.config['UPLOAD_PATH']='uploaded_tracks'
+
 @app.route('/')         #collegamento tra ('percorso url') e ...                        
 def upload():           #... funzione view
    return render_template('upload.html')
@@ -20,6 +22,8 @@ def upload_file():
       if file_ext not in app.config['UPLOAD_EXTENSIONS']:
          abort(400)
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
+   x = pf.name_track(filename)
+   print("just an index,", x)
    return render_template('oscilloscope.html', song_name=filename)
 
 @app.route('/ <filename>')      #new method returns the track (uploaded in 'uploaded_tracks' folder)
