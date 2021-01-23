@@ -18,5 +18,10 @@
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}"
         }
+        ,{
+            "name": "Debug app",
+            "type": "firefox",
+            "request": "attach"
+        }
     ]
 }

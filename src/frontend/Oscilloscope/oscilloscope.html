@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <header name="Access-Control-Allow-Origin" value="*">
+    <meta charset='UTF-8' />
+    <title>Oscilloscope</title>
+    <link rel="stylesheet" href="oscilloscope.css">
+</head>
+
+<div id='oscilloscopio'>
+  <h1 class='title'> Our first Oscilloscope</h1>
+
+  <body>
+    <canvas width=1000 height=350 style="border: 5px solid burlywood"></canvas>
+
+    <audio id=AudioSurce>
+      <source src="testTrack.mp3" />
+
+      Your browser does not support the audio tag.
+    </audio>
+    <button id='OnButton' data-playing="false" role="switch" aria-checked="false">
+      Play/Pause
+    </button>
+    <script src="oscilloscope.js"></script>
+</div>
+</body>
+
+</html>
