@@ -83,7 +83,7 @@
 
    //Now we run through a loop, defining the position of a small segment of the wave for each point in the buffer at a certain height based on the data point value form the array, then moving the line across to the place where the next wave segment should be drawn:
    for (var i = 0; i < bufferLength; i++) {
-                                                  var v = dataArray[i] / 128.0;
+     var v = dataArray[i] / 128.0;
      var y = (v * 350) / 2;
 
      if (i === 0) {
