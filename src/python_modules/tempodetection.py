@@ -24,7 +24,7 @@ def compute_novelty_complex(x, Fs, N=512, H=256):
     
     phase = np.angle(X)/(2*np.pi)
     
-    unwr_phase = np.zeros_like(X, dtype=float);
+    unwr_phase = np.zeros_like(X, dtype=float)
     for i in np.arange(X.shape[1]):
         unwr_phase[:,i] = np.unwrap( np.angle(X[:,i]) )
     
@@ -96,39 +96,40 @@ def plot_signal(x, Fs, title=None, color='C0'):
   plt.plot(time_axis, x, color=color)
   plt.show()
 
+
 ## Create a polyrhythm novelty function for testing
-def generate_polyrhythm_impulse_train():
-  pulses_len = 128
-
-  pulses_first = np.zeros(pulses_len)
-  pulses_first[np.arange(0, pulses_len, 8)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_first")
-  plt.stem(pulses_first, linefmt='C1--', use_line_collection=True)
-  plt.show()
-
-  pulses_second = np.zeros(pulses_len)
-  pulses_second[np.arange(1, pulses_len, 8)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_second")
-  plt.stem(pulses_second, linefmt='C2--', use_line_collection=True)
-  plt.show()
-
-  pulses_third = np.zeros(pulses_len)
-  pulses_third[np.arange(8, pulses_len, 10)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_third")
-  plt.stem(pulses_third, linefmt='C2--', use_line_collection=True)
-  plt.show()
-
-  pulses = pulses_first + pulses_second + pulses_third
-  pulses = np.clip(pulses, a_min=0, a_max=1)
-  plt.figure(figsize=(16,5))
-  plt.title("pulses")
-  plt.stem(pulses, linefmt='C0--', use_line_collection=True)
-  plt.show()
-
-  return pulses
+#def generate_polyrhythm_impulse_train():
+#  pulses_len = 128
+#
+#  pulses_first = np.zeros(pulses_len)
+#  pulses_first[np.arange(0, pulses_len, 8)] = 1
+#  plt.figure(figsize=(16,5))
+#  plt.title("pulses_first")
+#  plt.stem(pulses_first, linefmt='C1--', use_line_collection=True)
+#  plt.show()
+#
+#  pulses_second = np.zeros(pulses_len)
+#  pulses_second[np.arange(1, pulses_len, 8)] = 1
+#  plt.figure(figsize=(16,5))
+#  plt.title("pulses_second")
+#  plt.stem(pulses_second, linefmt='C2--', use_line_collection=True)
+#  plt.show()
+#
+#  pulses_third = np.zeros(pulses_len)
+#  pulses_third[np.arange(8, pulses_len, 10)] = 1
+#  plt.figure(figsize=(16,5))
+#  plt.title("pulses_third")
+#  plt.stem(pulses_third, linefmt='C2--', use_line_collection=True)
+#  plt.show()
+#
+#  pulses = pulses_first + pulses_second + pulses_third
+#  pulses = np.clip(pulses, a_min=0, a_max=1)
+#  plt.figure(figsize=(16,5))
+#  plt.title("pulses")
+#  plt.stem(pulses, linefmt='C0--', use_line_collection=True)
+#  plt.show()
+#
+#  return pulses
 
 ###############################################
 #### Most important function of the module ####
@@ -205,7 +206,7 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
         else:
           #current_periodicity_consecutive_counts = 1
           if verbose: print("expected_peak was NOT found in position %i\n" % (expected_peak_pos))
-          break;
+          break
         if verbose == True: print("\n")
 
       
