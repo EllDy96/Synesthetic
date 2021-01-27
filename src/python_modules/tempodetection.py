@@ -24,7 +24,7 @@ def compute_novelty_complex(x, Fs, N=512, H=256):
     
     phase = np.angle(X)/(2*np.pi)
     
-    unwr_phase = np.zeros_like(X, dtype=float)
+    unwr_phase = np.zeros_like(X, dtype=float);
     for i in np.arange(X.shape[1]):
         unwr_phase[:,i] = np.unwrap( np.angle(X[:,i]) )
     
@@ -96,45 +96,51 @@ def plot_signal(x, Fs, title=None, color='C0'):
   plt.plot(time_axis, x, color=color)
   plt.show()
 
-
 ## Create a polyrhythm novelty function for testing
-#def generate_polyrhythm_impulse_train():
-#  pulses_len = 128
-#
-#  pulses_first = np.zeros(pulses_len)
-#  pulses_first[np.arange(0, pulses_len, 8)] = 1
-#  plt.figure(figsize=(16,5))
-#  plt.title("pulses_first")
-#  plt.stem(pulses_first, linefmt='C1--', use_line_collection=True)
-#  plt.show()
-#
-#  pulses_second = np.zeros(pulses_len)
-#  pulses_second[np.arange(1, pulses_len, 8)] = 1
-#  plt.figure(figsize=(16,5))
-#  plt.title("pulses_second")
-#  plt.stem(pulses_second, linefmt='C2--', use_line_collection=True)
-#  plt.show()
-#
-#  pulses_third = np.zeros(pulses_len)
-#  pulses_third[np.arange(8, pulses_len, 10)] = 1
-#  plt.figure(figsize=(16,5))
-#  plt.title("pulses_third")
-#  plt.stem(pulses_third, linefmt='C2--', use_line_collection=True)
-#  plt.show()
-#
-#  pulses = pulses_first + pulses_second + pulses_third
-#  pulses = np.clip(pulses, a_min=0, a_max=1)
-#  plt.figure(figsize=(16,5))
-#  plt.title("pulses")
-#  plt.stem(pulses, linefmt='C0--', use_line_collection=True)
-#  plt.show()
-#
-#  return pulses
+def generate_polyrhythm_impulse_train():
+  pulses_len = 128
+
+  pulses_first = np.zeros(pulses_len)
+  pulses_first[np.arange(0, pulses_len, 8)] = 1
+  plt.figure(figsize=(16,5))
+  plt.title("pulses_first")
+  plt.stem(pulses_first, linefmt='C1--', use_line_collection=True)
+  plt.show()
+
+  pulses_second = np.zeros(pulses_len)
+  pulses_second[np.arange(1, pulses_len, 8)] = 1
+  plt.figure(figsize=(16,5))
+  plt.title("pulses_second")
+  plt.stem(pulses_second, linefmt='C2--', use_line_collection=True)
+  plt.show()
+
+  pulses_third = np.zeros(pulses_len)
+  pulses_third[np.arange(8, pulses_len, 10)] = 1
+  plt.figure(figsize=(16,5))
+  plt.title("pulses_third")
+  plt.stem(pulses_third, linefmt='C2--', use_line_collection=True)
+  plt.show()
+
+  pulses = pulses_first + pulses_second + pulses_third
+  pulses = np.clip(pulses, a_min=0, a_max=1)
+  plt.figure(figsize=(16,5))
+  plt.title("pulses")
+  plt.stem(pulses, linefmt='C0--', use_line_collection=True)
+  plt.show()
+
+  return pulses
+
+## "Circular modulus" function
+def circ_mod(a, b):
+  res = a%b
+  if res >= round(b/2):
+    res = b - res
+  return res
 
 ###############################################
 #### Most important function of the module ####
 ###############################################
-def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
+def periodicities_lookup(input_signal, peak_threshold=0.3, EPS=2, verbose=False):
   if verbose == True:
     print("******************************************")
     print("****** Looking for periodicities... ******")
@@ -142,11 +148,11 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
 
 
   # Get the indices of the peaks
-  peak_positions = np.where(input_signal == 1)[0] # JUST FOR NOW
-  #peak_positions = find_peaks(input_signal,
-  #                            height=peak_threshold,
-  #                            distance=1
-  #                            )[0]
+  #peak_positions = np.where(input_signal == 1)[0] # JUST FOR NOW
+  peak_positions = find_peaks(input_signal,
+                              height=peak_threshold,
+                              distance=5
+                              )[0]
   first_peak_pos = peak_positions[0]
   last_peak_pos =  peak_positions[-1]
   if verbose == True:
@@ -185,7 +191,8 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
         pos = period[1]
         cts = period[2]
         # same or multiple periodicity length      AND       same offset
-        if (current_periodicity_len % length == 0) and ( ((curr_peak_pos-pos) % length == 0) ):  # or (curr_peak_pos == pos) ):
+        #if (current_periodicity_len % length == 0) and ( ((curr_peak_pos-pos) % length == 0) ):  # or (curr_peak_pos == pos) ): ########### W/OUT TOLERANCE #############
+        if circ_mod(current_periodicity_len, length) <= EPS and circ_mod(curr_peak_pos-pos, length) <= EPS: ############ W/ TOLERANCE ############
           look_for_current_periodicity_consecutive_counts = False
 
     if look_for_current_periodicity_consecutive_counts == False:
@@ -199,21 +206,22 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
       while k < (len(peak_positions)-1):
         expected_peak_pos = peak_positions[k]+current_periodicity_len
         if verbose == True: print("expected_peak_pos:%i" % (expected_peak_pos))
-        if (expected_peak_pos) in peak_positions:
+        #if (expected_peak_pos) in peak_positions: ########### W/OUT TOLERANCE #############
+        if (np.any(np.isclose(expected_peak_pos, peak_positions, atol=EPS))): ############ W/ TOLERANCE ############
           current_periodicity_consecutive_counts += 1
           if verbose == True: print("current_periodicity_consecutive_counts:%i" % (current_periodicity_consecutive_counts))
-          k = np.where(peak_positions == expected_peak_pos)[0][0] # index of element expected_peak_pos inside peak_positions
+          k = np.where(np.isclose(peak_positions, expected_peak_pos, atol=EPS))[0][0] # index of element expected_peak_pos inside peak_positions ########### W/ TOLERANCE #############
         else:
           #current_periodicity_consecutive_counts = 1
           if verbose: print("expected_peak was NOT found in position %i\n" % (expected_peak_pos))
-          break
+          break;
         if verbose == True: print("\n")
 
       
 
       # Append the current periodicity: length and current_periodicity_consecutive_counts
       append = True
-      if current_periodicity_consecutive_counts <= 1:
+      if current_periodicity_consecutive_counts <= 2:
         append = False
       
       #if current_periodicity_len not in periods[:,0] and current_periodicity_len-current_periodicity_offset not in periods[:,1]:
@@ -237,10 +245,12 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
   # This will tell us how many of the periodicities do we need to explain the entire content of pulses.
   pulses_copy = np.array(input_signal, copy=True)
   w = 0
-  while not (pulses_copy == 0).all() and w < len(periodicities): # until all values in pulses aren't zeros
+  while not (pulses_copy <= peak_threshold).all() and w < len(periodicities): # until all values in pulses aren't zeros ########### INSERT TOLERANCE #############
     pulses_copy[np.arange(periodicities[w][1], len(pulses_copy), periodicities[w][0])] = 0
     w = w+1
-  if verbose == True: print(pulses_copy)
+  if verbose == True: 
+    print(pulses_copy)
+    plot_signal(pulses_copy, 1, 'Complex novelty function of z', 'C2')
 
   return periodicities[0:w]
 
@@ -248,7 +258,7 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, verbose=False):
 # Example of function call
 
 #pulses = generate_polyrhythm_impulse_train()
-#periods = periodicities_lookup(pulses, verbose=False)
+#periods = periodicities_lookup(pulses, EPS=3, verbose=False)
 #print("Number of periodicities found in the signal:", len(periods))
 #for period in periods:
 #  print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
