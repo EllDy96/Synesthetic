@@ -43,8 +43,8 @@ function draw() {
 function play() {
   if (!song.isPlaying()) {
     song.play();
-    var interval1= setTempoInColors('color1', 60);
-    var interval2 =setTempoInColors('color2', 120);
+    setTempoInColors('color1', 60);
+    setTempoInColors('color2', 120);
   }
 }
 
