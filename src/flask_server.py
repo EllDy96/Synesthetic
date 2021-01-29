@@ -4,6 +4,8 @@ from python_modules import tempodetection as td
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 import librosa 
+#import matplotlib.pyplot as plt
+import numpy as np
 
 #template_dir = os.path.relpath('./templates') #reference template, in case you want to change the standard path
 app= Flask(__name__)#, template_folder=template_dir)
@@ -26,11 +28,14 @@ def upload_file():
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
  #  x = pf.name_track(filename)
  #  print("just an index,", x)
-   pulses = td.generate_polyrhythm_impulse_train()
-   #track_path = os.path.join(app.config['UPLOAD_PATH'], filename)
-   #[x, Fs]=librosa.load(track_path, sr=None)
-   #[nov_x, Fs_nov] = td.compute_novelty_complex(x, Fs, N=512, H=256)
-   periods = td.periodicities_lookup(pulses, verbose=False)
+ #  pulses = td.generate_polyrhythm_impulse_train()
+   track_path = os.path.join(app.config['UPLOAD_PATH'], filename)
+   [x, Fs]=librosa.load(track_path, sr=None)
+   [nov_x, Fs_nov_x] = td.compute_novelty_complex(x, Fs, N=512, H=256)
+
+   #td.plot_signal(nov_x, Fs_nov_x, 'Complex novelty function of the track', 'C2')
+
+   periods = td.periodicities_lookup(nov_x, EPS = 5, verbose=False)
    print("Number of periodicities found in the signal:", len(periods))
    for period in periods:
       print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
