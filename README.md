@@ -5,7 +5,8 @@
 The aim of the project is to render a visual representation of a musical piece via music information retrieval algorithms. The user is required to upload three audio tracks:   
 1. A one-channel track containing the most rhythmic relevant sounds of the musical piece (e.g. drums)
 2. A one-channel track containing the most harmonic content of the musical piece (e.g. chords)
-3. A two-channel mixdown of the first two audio tracks.   
+3. A two-channel mixdown of the first two audio tracks.    
+
 Based on the rhythmic and harmonic track, a dynamic visual representation is generated. The third track is played back during the visualization.
 
 ## Detailed project description
