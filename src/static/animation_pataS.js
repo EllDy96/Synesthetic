@@ -12,21 +12,16 @@ function setup() {
 
 function draw() {
   background(143);
-  //a = a + 0.05;
-  //s = 2 * cos(a);
   if (g >= height/2){
-    g = g - 5 
-    translate(width/3, g)
-  // vorrei far partire scale(s) solo dopo che g < heigth/2;
-  // fill('rgb(255,183,255)');
-  //  x = circle(0, 0, dim);
+    g = g - 8
+    //traslate(0,g);
   }
   if (g < height/2){
-    translate(width/3, g)
+    //translate(0,g)
     dim = dim -4;
-    if (dim == 0)
-      noLoop();
   } 
   fill('rgb(255,183,255)');
-  circle(0, 0, dim);  
+  circle(width/3, g ,dim);
+  if(dim==0)
+    noLoop();
 }
