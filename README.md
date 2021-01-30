@@ -1,8 +1,8 @@
-# VisualParasyte
+# Synesthetic
 
 ## Abstract
 
-The aim of the project is to “contaminate” a visual representation of a musical piece via music information retrieval algorithms. The user uploads a musical piece and the algorithm extracts its rhythmic and harmonic structure. Based on that, it designs a dynamic visual representation of that musical piece.
+The aim of the project is to render a visual representation of a musical piece via music information retrieval algorithms. The user uploads a musical piece and the algorithm extracts its rhythmic structures. Based on that, it designs a dynamic visual representation of the track. In particular, we focused on musical tracks containing polyrhythms.
 
 
 ## Detailed project description
@@ -33,10 +33,6 @@ Visualize in a different way:
 
 Background texture to be selected based on the musical piece.
 
-## Miscellaneous ideas
-* Kaleidoscope
-* Simulation of ink in water
-* Generative art (https://p5js.org/reference/#/libraries/p5.sound)
-* p5.js Documentation (https://p5js.org/reference/#/libraries/p5.sound)
+
 
 
