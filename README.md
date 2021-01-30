@@ -6,9 +6,7 @@ The aim of the project is to render a visual representation of a musical piece v
 1. A one-channel track containing the most rhythmic relevant sounds of the musical piece (e.g. drums)
 2. A one-channel track containing the most harmonic content of the musical piece (e.g. chords)
 3. A two-channel mixdown of the first two audio tracks.
-Based on that, it designs a dynamic visual representation of the track. 
-In particular, we focus on musical tracks containing polyrhythms.
-
+Based on the rhythmic and harmonic track, a dynamic visual representation is generated. The third track is played back during the visualization.
 
 ## Detailed project description
 
