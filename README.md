@@ -2,7 +2,7 @@
 
 ## Abstract
 
-The aim of the project is to render a visual representation of a musical piece via music information retrieval algorithms. The user uploads a musical piece and the algorithm extracts its rhythmic structures. Based on that, it designs a dynamic visual representation of the track. In particular, we focused on musical tracks containing polyrhythms.
+The aim of the project is to render a visual representation of a musical piece via music information retrieval algorithms. The user uploads a musical piece and the algorithm extracts its rhythmic structure. Based on that, it designs a dynamic visual representation of the track. In particular, we focus on musical tracks containing polyrhythms.
 
 
 ## Detailed project description
@@ -15,14 +15,14 @@ Python and Javascript are integrated using Flask (see https://flask.palletsproje
 
 
 ### Backend (Python)
-Pre-analysis/extration  of information from the audio track:
+Pre-analysis/extration of information from the audio track:
 * Tempo (tempogram)
 * Rhythm (polyrhythmic matrix)
 * Harmony
 * Frequencies (spectrogram and cromagram)
 
 All information is extracted in the backend in order to optimize the realtime aspect of the visualization in javascript.
-We give to the javascript frontend all the extracted information in a series of arrays/matrices (Json format) that are interpreted simultaneously to the playback of the musical piece. We have to sync the arrays with the audio playback.
+We give to the javascript frontend all the extracted information in a series of arrays/matrices (Json format) that are interpreted simultaneously with the playback of the musical piece. We have to sync the arrays with the audio playback.
 
 ### Frontend (Javascript)
 Visualize in a different way:
