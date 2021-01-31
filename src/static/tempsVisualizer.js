@@ -119,11 +119,12 @@ function setup()
         let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
         mySound.addCue(current_cue, function(args){current_rhythm_properties.update(args)}, args);
         /*mySound.addCue(current_cue,
-                       function(time)
+                       function({current_cue, j, n_rhythms})
                        {
                          current_rhythm_properties.n_rhythms=n_rhythms;
-                         console.log("cue callback at time ", time);
-                       },current_cue);*/
+                         current_rhythm_properties.rhythm_isStruck[j]=true;
+                         console.log("cue callback at time ", current_cue);
+                       },{current_cue, j, n_rhythms});*/
       }
       console.log("\n")
     }
