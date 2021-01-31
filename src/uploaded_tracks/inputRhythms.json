@@ -1,0 +1,27 @@
+{
+    "n_windows":3,
+    "window_timings":
+    [
+        {"start":0.0, "end":5.0},
+        {"start":5.0, "end":10.0},
+        {"start":10.0, "end":15.0}      
+    ],
+    "window_content":
+    [
+        [
+        {"BPM":60.0, "offset":0.0},
+        {"BPM":60.0, "offset":0.25}
+        ],
+        [
+        {"BPM":30.0, "offset":0.0},
+        {"BPM":30.0, "offset":0.25},
+        {"BPM":30.0, "offset":0.75}
+        ],
+        [
+        {"BPM":60.0, "offset":0.0},
+        {"BPM":60.0, "offset":0.2},
+        {"BPM":60.0, "offset":0.3},
+        {"BPM":60.0, "offset":0.5}
+        ]
+    ]
+  }
