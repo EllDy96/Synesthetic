@@ -23,11 +23,11 @@ class rhythm_properties
 
   update(args)
   {
-    //if(this.n_rhythms != args._n_rhythms)
-    //{
+    if(this.n_rhythms != args._n_rhythms)
+    {
       this.n_rhythms = args._n_rhythms;
       console.log(this.n_rhythms)
-    //}    
+    }    
     // The property has to keep the value "true" only for an instant,
     // so that the toggle is detected by the draw() loop, which monitors the array.
     if(this.n_rhythms != 0)
@@ -39,11 +39,6 @@ class rhythm_properties
       }
       this.rhythm_isStruck[args._struck_rhythm_idx] = true;
     }
-  }
-
-  update2()
-  {
-    this.n_rhythms
   }
 
   print()
@@ -122,16 +117,14 @@ function setup()
       {
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
-        /*let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
-        mySound.addCue(current_cue, 
-                       current_rhythm_properties.update,
-                       args);*/
-        mySound.addCue(current_cue,
+        let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
+        mySound.addCue(current_cue, function(args){current_rhythm_properties.update(args)}, args);
+        /*mySound.addCue(current_cue,
                        function(time)
                        {
                          current_rhythm_properties.n_rhythms=n_rhythms;
                          console.log("cue callback at time ", time);
-                       },current_cue);
+                       },current_cue);*/
       }
       console.log("\n")
     }
