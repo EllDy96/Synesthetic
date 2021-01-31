@@ -2,28 +2,26 @@
  *********** DATA LOADING AND SETUP *************
  ************************************************/ 
 
-// Global variables definition
-var cue_ctr = 0;
-let mySound;
-let rhythmic_content;
-let n_windows;
-let canvas_height = 400;
-let canvas_width = 800;
+// CLASSES DEFINITION
+
 // The draw_properties object contains the up-to-date rhythmic information of the piece.
 // The updates are monitored by the loop of the draw() function.
 // The updates are scheduled with the addCue() function.
-var current_rhythm_properties =
+class rhythm_properties
 {
-  n_rhythms: 0,
-  rhythm_isStruck: 
-    [
-      false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-      false, false, false, false, // except in the instant when the corresponding rhythm is struck.
-      false, false, false, false,
-      false, false, false, false,
-    ], 
-                      
-  update: function(args)
+  constructor()
+  {
+    this.n_rhythms = 0;
+    this.rhythm_isStruck =
+      [
+        false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
+        false, false, false, false, // except in the instant when the corresponding rhythm is struck.
+        false, false, false, false,
+        false, false, false, false,
+      ];
+  }
+
+  update(args)
   {
     //if(this.n_rhythms != args._n_rhythms)
     //{
@@ -41,13 +39,27 @@ var current_rhythm_properties =
       }
       this.rhythm_isStruck[args._struck_rhythm_idx] = true;
     }
-    
-  },
-  print: function()
+  }
+
+  update2()
+  {
+    this.n_rhythms
+  }
+
+  print()
   {
     console.log("n_rhythms: ", this.n_rhythms, " rhythm_isStruck: ", this.rhythm_isStruck);
   }
 };
+
+// GLOBAL VARIABLES DEFINITION
+let mySound;
+let rhythmic_content;
+let n_windows;
+let canvas_height = 400;
+let canvas_width = 800;
+var current_rhythm_properties = new rhythm_properties();
+
 
 // Load the audio file and the JSON file
 function preload() 
@@ -60,6 +72,11 @@ function storeJSON(data)
   rhythmic_content = data;
   n_windows = rhythmic_content.n_windows;
 }
+function update_data(time)
+                       {
+                         current_rhythm_properties.n_rhythms=n_rhythms;
+                         console.log("cue callback at time ", time);
+                       }
 
 // Initialize the canvas and schedule the addCue calls upon the audio file
 function setup() 
@@ -67,7 +84,7 @@ function setup()
   // INITIALIZE THE CANVAS
   canvas = createCanvas(canvas_width, canvas_height);
   canvas.background(200);
-  mySound.showControls();
+  //mySound.showControls();
 
   // SCHEDULE THE ADDCUE CALLS
   // For each window...
@@ -105,8 +122,10 @@ function setup()
       {
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
-        //let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
-        //mySound.addCue(current_cue, current_rhythm_properties.update, args);
+        /*let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
+        mySound.addCue(current_cue, 
+                       current_rhythm_properties.update,
+                       args);*/
         mySound.addCue(current_cue,
                        function(time)
                        {
@@ -221,16 +240,10 @@ btnPause.addEventListener("click", pause);
 
 function play() 
 {
-  if (!mySound.isPlaying()) 
-  {
     mySound.play();
-  }
 }
 
 function pause() 
 {
-  if (mySound.isPlaying()) 
-  {
     mySound.pause();
-  }
 }
