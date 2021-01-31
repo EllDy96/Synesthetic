@@ -2,6 +2,16 @@
  *********** DATA LOADING AND SETUP *************
  ************************************************/ 
 
+// HELPER FUNCTIONS DEFINITION
+function getRandomColor(brightness)
+{
+  // Six levels of brightness from 0 to 5, 0 being the darkest
+  var rgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
+  var mix = [brightness*51, brightness*51, brightness*51]; //51 => 255/5
+  var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function(x){ return Math.round(x/2.0)})
+  return "rgb(" + mixedrgb.join(",") + ")";
+}
+
 // CLASSES DEFINITION
 
 // The draw_properties object contains the up-to-date rhythmic information of the piece.
@@ -27,18 +37,8 @@ class rhythm_properties
     {
       this.n_rhythms = args._n_rhythms;
       console.log(this.n_rhythms)
-    }    
-    // The property has to keep the value "true" only for an instant,
-    // so that the toggle is detected by the draw() loop, which monitors the array.
-    if(this.n_rhythms != 0)
-    {
-      this.rhythm_isStruck = []
-      for (let i=0; i<this.n_rhythms; i++)
-      {
-        this.rhythm_isStruck[i] = false;
-      }
-      this.rhythm_isStruck[args._struck_rhythm_idx] = true;
     }
+    this.rhythm_isStruck[args._struck_rhythm_idx] = true;
   }
 
   print()
@@ -60,7 +60,7 @@ var current_rhythm_properties = new rhythm_properties();
 function preload() 
 {
   loadJSON('assets/inputRhythms.json', storeJSON);
-  mySound = createAudio('assets/testTrack.mp3');
+  mySound = createAudio('assets/clicktrack.wav');
 }
 function storeJSON(data)
 {
@@ -112,8 +112,7 @@ function setup()
       console.log("period_len: ", period_len)
 
       // Starting from the first cue, until we reach the end of the i-th window...
-      let current_cue = first_cue;
-      for(current_cue = first_cue; current_cue<last_cue; current_cue+=period_len)
+      for(let current_cue = first_cue; current_cue<last_cue; current_cue+=period_len)
       {
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
@@ -140,7 +139,16 @@ function setup()
  *********** VISUALIZATION *************
  ***************************************/ 
 var maxDiameter = 50; 
+var diam = 150;
 var theta = 0; 
+let fill_1 = 0;
+let fill_2 = 0;
+
+function main_loop()
+{
+  console.log("MAIN")
+}
+main_loop();
 
 function draw()
 {
@@ -160,53 +168,86 @@ function draw()
       // calculate the diameter of the circle 
       //height/2 + sin(theta) * amplitude; 
 
-      var diam = 100 + sin(theta) * maxDiameter ;
+      //var diam = 100 + sin(theta) * maxDiameter ;
 
-      // draw the circle 
+      if(current_rhythm_properties.rhythm_isStruck[0]==true)
+      {
+        console.log("RHYTHM 1/1 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[0]=false;
+        //fill_1 = getRandomColor(3);
+        fill_1 = 255-fill_1;
+          
+      }
+      fill(fill_1);
       ellipse(width/2,height/2, diam, diam); 
 
       // make theta keep getting bigger
       // you can play with this number to change the speed
-      theta += .1; 
+      //theta += .1; 
     }
     // TWO RHYTHMS
     else if(current_rhythm_properties.n_rhythms == 2)
     {
       background(0,127,0);
+      //var diam = 100 + sin(theta) * maxDiameter ;
 
-      var diam = 100 + sin(theta) * maxDiameter ;
+      // If both rhythms have been struck at the same time ...
+      if(current_rhythm_properties.rhythm_isStruck[0]==true && current_rhythm_properties.rhythm_isStruck[1]==true)
+      {
+        console.log("RHYTHMS 1/2 AND 2/2 STRUCK")
+        fill_1 = fill_2 = 255-fill_1;//getRandomColor(3);
+      }
+      // If only the first rhythm has been struck ...
+      if(current_rhythm_properties.rhythm_isStruck[0]==true)
+      {
+        console.log("RHYTHM 1/2 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[0]=false;
+        fill_1 = 255-fill_1;
+        //fill_1 = getRandomColor(3);
+      }
+      // If only the second rhythm has been struck ...
+      if(current_rhythm_properties.rhythm_isStruck[1]==true)
+      {
+        console.log("RHYTHM 2/2 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[1]=false;
+        fill_2 = 255-fill_2;
+        //fill_2 = getRandomColor(3);
+      }
 
-      ellipse(width/3,height/2, diam, diam); 
+      fill(fill_1);
+      ellipse(width/3,height/2, diam, diam);
+
+      fill(fill_2);
       ellipse(2*width/3,height/2, diam, diam);
 
-      theta += .1; 
+      //theta += .1; 
     }
     // THREE RHYTHMS
     else if(current_rhythm_properties.n_rhythms == 3)
     {
       background(0,0,127);
 
-      var diam = 100 + sin(theta) * maxDiameter ;
+      //var diam = 100 + sin(theta) * maxDiameter ;
 
       ellipse(width/4,height/2, diam, diam); 
       ellipse(2*width/4,height/2, diam, diam); 
       ellipse(3*width/4,height/2, diam, diam); 
       
-      theta += .1; 
+      //theta += .1; 
     }
     // FOUR RHYTHMS
     else if(current_rhythm_properties.n_rhythms == 4)
     {
       background(127,127,0);
 
-      var diam = 100 + sin(theta) * maxDiameter ;
+      //var diam = 100 + sin(theta) * maxDiameter ;
 
       ellipse(width/5,height/2, diam, diam); 
       ellipse(2*width/5,height/2, diam, diam); 
       ellipse(3*width/5,height/2, diam, diam);
       ellipse(4*width/5,height/2, diam, diam); 
       
-      theta += .1; 
+      //theta += .1; 
     }
     else
     {
@@ -215,10 +256,6 @@ function draw()
     }    
   }
 }
-
-
-
-
 
 
 /***************************************
