@@ -53,7 +53,7 @@ let rhythmic_content;
 let n_windows;
 let canvas_height = 400;
 let canvas_width = 800;
-var current_rhythm_properties = new rhythm_properties();
+let current_rhythm_properties = new rhythm_properties();
 
 
 // Load the audio file and the JSON file
@@ -76,6 +76,7 @@ function update_data(time)
 // Initialize the canvas and schedule the addCue calls upon the audio file
 function setup() 
 {
+  frameRate(120);
   // INITIALIZE THE CANVAS
   canvas = createCanvas(canvas_width, canvas_height);
   canvas.background(200);
@@ -145,11 +146,6 @@ var theta = 0;
 let fill_1 = 0;
 let fill_2 = 0;
 
-function main_loop()
-{
-  console.log("MAIN")
-}
-main_loop();
 
 function draw()
 {
@@ -199,7 +195,7 @@ function draw()
         fill_1 = fill_2 = 255-fill_1;//getRandomColor(3);
       }
       // If only the first rhythm has been struck ...
-      if(current_rhythm_properties.rhythm_isStruck[0]==true)
+      else if(current_rhythm_properties.rhythm_isStruck[0]==true)
       {
         console.log("RHYTHM 1/2 STRUCK")
         current_rhythm_properties.rhythm_isStruck[0]=false;
@@ -207,7 +203,7 @@ function draw()
         //fill_1 = getRandomColor(3);
       }
       // If only the second rhythm has been struck ...
-      if(current_rhythm_properties.rhythm_isStruck[1]==true)
+      else if(current_rhythm_properties.rhythm_isStruck[1]==true)
       {
         console.log("RHYTHM 2/2 STRUCK")
         current_rhythm_properties.rhythm_isStruck[1]=false;
@@ -259,6 +255,7 @@ function draw()
 }
 
 
+
 /***************************************
  ************* CONTROLLER **************
  ***************************************/ 
@@ -271,10 +268,10 @@ btnPause.addEventListener("click", pause);
 
 function play() 
 {
-    mySound.play();
+  mySound.play();
 }
 
 function pause() 
 {
-    mySound.pause();
+  mySound.pause();
 }
