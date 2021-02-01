@@ -1,4 +1,4 @@
- /* referance: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API */
+ /* referance: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API  */
 
  var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 

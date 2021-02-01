@@ -220,17 +220,11 @@ const btnPause = document.querySelector("#btn-pause");
 btnPause.addEventListener("click", pause);
 
 function play() 
-{
-  if (!mySound.isPlaying()) 
-  {
-    mySound.play();
-  }
+{ 
+  mySound.play()
 }
 
 function pause() 
-{
-  if (mySound.isPlaying()) 
-  {
-    mySound.pause();
-  }
+{ 
+  mySound.pause();
 }
