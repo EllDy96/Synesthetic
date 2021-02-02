@@ -33,11 +33,13 @@ class rhythm_properties
 
   update(args)
   {
+    // Update the number of rhythms only if it's a different value
     if(this.n_rhythms != args._n_rhythms)
     {
       this.n_rhythms = args._n_rhythms;
       console.log(this.n_rhythms)
     }
+    // Trigger the rhythm which has been struck
     this.rhythm_isStruck[args._struck_rhythm_idx] = true;
   }
 
@@ -58,31 +60,25 @@ let current_rhythm_properties = new rhythm_properties();
 
 // Load the audio file and the JSON file
 function preload() 
-{
+{  
   loadJSON('assets/inputRhythms.json', storeJSON);
-  mySound = createAudio('assets/clicktrack.wav');
+  mySound = new Tone.Player("assets/clicktrack.wav").toDestination();  
 }
 function storeJSON(data)
 {
   rhythmic_content = data;
   n_windows = rhythmic_content.n_windows;
 }
-function update_data(time)
-                       {
-                         current_rhythm_properties.n_rhythms=n_rhythms;
-                         console.log("cue callback at time ", time);
-                       }
 
 // Initialize the canvas and schedule the addCue calls upon the audio file
 function setup() 
 {
-  frameRate(120);
+  frameRate(60);
   // INITIALIZE THE CANVAS
   canvas = createCanvas(canvas_width, canvas_height);
-  canvas.background(200);
-  //mySound.showControls();
+  canvas.background(0);
 
-  // SCHEDULE THE ADDCUE CALLS
+  // SCHEDULE THE Tone.Transport CALLS
   // For each window...
   for (i=0; i<n_windows; i++) 
   {
@@ -103,7 +99,7 @@ function setup()
       let rhythm = window_content[j];
       let period_len = 60.0/(rhythm.BPM); // Period length of the j-th rhythm (seconds)
       
-      // ... schedule the addCue calls for the j-th rhythm inside this window.
+      // ... schedule the Tone.Transport calls for the j-th rhythm inside this window.
       let first_cue = window_start+rhythm.offset; // Position of the first cue for the j-th rhythm in the i-th window
       let last_cue = window_end;
 
@@ -118,14 +114,13 @@ function setup()
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
         let args = {_struck_rhythm_idx:j, _n_rhythms:n_rhythms}
-        mySound.addCue(current_cue, function(args){current_rhythm_properties.update(args)}, args);
-        /*mySound.addCue(current_cue,
-                       function({current_cue, j, n_rhythms})
-                       {
-                         current_rhythm_properties.n_rhythms=n_rhythms;
-                         current_rhythm_properties.rhythm_isStruck[j]=true;
-                         console.log("cue callback at time ", current_cue);
-                       },{current_cue, j, n_rhythms});*/
+        Tone.Transport.schedule(function(){current_rhythm_properties.update(args)}, current_cue);
+        /*Tone.Transport.schedule(function({current_cue, j, n_rhythms})
+                                  {
+                                    current_rhythm_properties.n_rhythms=n_rhythms;
+                                    current_rhythm_properties.rhythm_isStruck[j]=true;
+                                    console.log("cue callback at time ", current_cue);
+                                  },{current_cue, j, n_rhythms});*/
       }
       console.log("\n")
     }
@@ -263,15 +258,17 @@ function draw()
 const btnPlay = document.querySelector("#btn-play");
 btnPlay.addEventListener("click", play);
 
-const btnPause = document.querySelector("#btn-pause");
-btnPause.addEventListener("click", pause);
+const btnStop = document.querySelector("#btn-stop");
+btnStop.addEventListener("click", stop);
 
 function play() 
 {
-  mySound.play();
+  mySound.start();
+  Tone.Transport.start();
 }
 
-function pause() 
+function stop() 
 {
-  mySound.pause();
+  mySound.stop();
+  Tone.Transport.stop();
 }
