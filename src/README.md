@@ -25,11 +25,11 @@ Expected output:
 * file uploads with Flask  
 link: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
-* manage static files in Flask
+* manage static files in Flask  
 link: https://www.youtube.com/watch?v=tXpFERibRaU
 
-* routing method for reaching elements not in static directory (which is a Flask pre-routed path)
+* routing method for reaching elements not in static directory (which is a Flask pre-routed path)  
 link: https://www.youtube.com/watch?v=Y2fMCxLz6wM&list=LL&index=1
 
-* Animations with p5.js (metronome example)
+* Animations with p5.js (metronome example)  
 link: https://compform.net/animation/
