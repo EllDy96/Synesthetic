@@ -66,8 +66,8 @@ let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
 let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
-let canvas_height = 400;
-let canvas_width = 800;
+let canvas_height = 750;
+let canvas_width = 1200;
 
 
 
