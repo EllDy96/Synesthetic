@@ -1,3 +1,4 @@
+//### THIS ANIMATION SIMULATE THE INFAMOUS PATATAP's ANIMATION FOR "S" KEY ###//
 let g 
 let dim = 120
 let n_ritmi = 2;
