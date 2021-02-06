@@ -1,3 +1,8 @@
+/*
+ *****************************MODEL*******************************************************************************************
+ */
+
+
 var color_palette = [
   "#d24632",
   "#f5e132",
@@ -13,11 +18,14 @@ var sizes = [50, 150, 200, 250, 300, 350, 400]; // old: [50, 100, 150, 200];
 var rnd_color;
 var c_;
 var curr_block;
-
+var displayCircles = false;
+/*
+ *****************************VIEW*******************************************************************************************
+ */
 function setup() {
   //createCanvas(windowWidth-20, windowHeight-20);
   createCanvas(800, 800);
-
+  background(0);
   strokeWeight(10);
   var i = 0;
   var x = 0;
@@ -50,14 +58,6 @@ function setup() {
   //   currWidth=random(sizes);
   //   currHeight=random(sizes);
   // }
-
-
-
-
-
-
-
-
   //still setup bruh
   c1 = color(204, 102, 0); //orange
   c2 = color(0, 102, 153); //blue
@@ -70,7 +70,14 @@ function setup() {
 
 function draw() {
   for (let i = 0; i < blocks.length; i++) {
-    blocks[i].display(blocks[i].color);
+    // displayCircle is the variable to check if we want to draw cirle of rectangle 
+    if (!displayCircles) {
+      blocks[i].displayRect(blocks[i].color);
+    } else {
+      blocks[i].displayCircle(blocks[i].color);
+    }
+
+    //blocks[i].display(blocks[i].color);
   }
 
   s = s + 0.1;
@@ -84,13 +91,19 @@ function setGradient(s, k) {
     if (blocks[i].color == color_palette[0]) {
       let c_ = color(blocks[i].color);
       let c = lerpColor(c1, c_, k);
-      blocks[i].display(c);
+      if (!displayCircles) {
+        blocks[i].displayRect(c);
+      } else {
+        blocks[i].displayCircle(c);
+      }
     }
   }
   pop()
 }
 
-
+/*
+ *****************************CONTROLLER*******************************************************************************************
+ */
 
 class Block {
   //constructor
@@ -101,14 +114,20 @@ class Block {
     this.dim2 = dim_2;
     this.color = color;
     this.area = (this.dim1 * this.dim2);
-
+    this.radius = 0;
   }
   //functionalities
-  display(color_pass) {
-    fill(color_pass)
-    rect(this.x, this.y, this.dim1, this.dim2)
-  }
 
+  displayCircle(color_pass) {
+    fill(color_pass)
+    square(this.x, this.y,this.dim2, this.radius);
+    this.radius+=3;
+  }
+  displayRect(color_pass) {
+    this.radius = 0;
+    fill(color_pass)
+    rect(this.x, this.y, this.dim1, this.dim2);
+  }
 }
 
 function fillOnRows(y, currHeight) {
