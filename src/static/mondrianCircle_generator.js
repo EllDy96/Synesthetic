@@ -120,7 +120,7 @@ class Block {
 
   displayCircle(color_pass) {
     fill(color_pass)
-    square(this.x, this.y,this.dim2, this.radius);
+    square(this.x, this.y,this.dim1,this.radius);
     this.radius+=3;
   }
   displayRect(color_pass) {
