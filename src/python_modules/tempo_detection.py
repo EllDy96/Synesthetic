@@ -1,3 +1,7 @@
+###############################################
+############## LIBRARY IMPORT #################
+###############################################
+
 import numpy as np
 import scipy as sp
 import random
@@ -9,6 +13,11 @@ from scipy import signal
 from skimage.feature import peak_local_max
 from scipy.signal import find_peaks
 import IPython.display as ipd
+import json
+
+###############################################
+############# HELPER FUNCTIONS ################
+###############################################
 
 ## Complex Novelty Function
 def warp(x, low, interval):
@@ -86,51 +95,9 @@ def smooth(x, win_length=3, win_type='boxcar'):
     # return the useful part of y
     return y
 
-## Signal plot function
-def plot_signal(x, Fs, title=None, color='C0'):
-  time_axis = np.arange(len(x))/Fs
-  plt.figure(figsize=(10,4))
-  plt.title(title)
-  plt.xlabel('Time (seconds)')
-  plt.ylabel('Amplitude')
-  plt.plot(time_axis, x, color=color)
-  plt.show()
-
-## Create a polyrhythm novelty function for testing
-def generate_polyrhythm_impulse_train():
-  pulses_len = 128
-
-  pulses_first = np.zeros(pulses_len)
-  pulses_first[np.arange(0, pulses_len, 8)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_first")
-  plt.stem(pulses_first, linefmt='C1--', use_line_collection=True)
-  plt.show()
-
-  pulses_second = np.zeros(pulses_len)
-  pulses_second[np.arange(1, pulses_len, 8)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_second")
-  plt.stem(pulses_second, linefmt='C2--', use_line_collection=True)
-  plt.show()
-
-  pulses_third = np.zeros(pulses_len)
-  pulses_third[np.arange(8, pulses_len, 10)] = 1
-  plt.figure(figsize=(16,5))
-  plt.title("pulses_third")
-  plt.stem(pulses_third, linefmt='C2--', use_line_collection=True)
-  plt.show()
-
-  pulses = pulses_first + pulses_second + pulses_third
-  pulses = np.clip(pulses, a_min=0, a_max=1)
-  plt.figure(figsize=(16,5))
-  plt.title("pulses")
-  plt.stem(pulses, linefmt='C0--', use_line_collection=True)
-  plt.show()
-
-  return pulses
 
 ## "Circular modulus" function
+# Lets us see if a is multiple of b with a symmetrical tolerance
 def circ_mod(a, b):
   res = a%b
   if res >= round(b/2):
@@ -138,8 +105,10 @@ def circ_mod(a, b):
   return res
 
 ###############################################
-#### Most important function of the module ####
+########### PERIODICITIES LOOKUP ##############
 ###############################################
+
+# Detects all the periodicities in input_signal
 def periodicities_lookup(input_signal, peak_threshold=0.3, EPS=2, verbose=False):
   if verbose == True:
     print("******************************************")
@@ -153,8 +122,6 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, EPS=2, verbose=False)
                               height=peak_threshold,
                               distance=5
                               )[0]
-  first_peak_pos = peak_positions[0]
-  last_peak_pos =  peak_positions[-1]
   if verbose == True:
     print("Detected peak positions:%s\n" % (peak_positions))
 
@@ -211,17 +178,18 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, EPS=2, verbose=False)
           current_periodicity_consecutive_counts += 1
           if verbose == True: print("current_periodicity_consecutive_counts:%i" % (current_periodicity_consecutive_counts))
           k = np.where(np.isclose(peak_positions, expected_peak_pos, atol=EPS))[0][0] # index of element expected_peak_pos inside peak_positions ########### W/ TOLERANCE #############
+          if verbose == True: print("k: %i, peak_positions[k]: %i" %(k, peak_positions[k])) 
         else:
           #current_periodicity_consecutive_counts = 1
           if verbose: print("expected_peak was NOT found in position %i\n" % (expected_peak_pos))
-          break;
+          break
         if verbose == True: print("\n")
 
       
 
       # Append the current periodicity: length and current_periodicity_consecutive_counts
       append = True
-      if current_periodicity_consecutive_counts <= 2:
+      if current_periodicity_consecutive_counts <= 3:
         append = False
       
       #if current_periodicity_len not in periods[:,0] and current_periodicity_len-current_periodicity_offset not in periods[:,1]:
@@ -243,23 +211,72 @@ def periodicities_lookup(input_signal, peak_threshold=0.3, EPS=2, verbose=False)
   # Starting from the periodicity with most consecutive counts, remove all of its values in the pulses array.
   # Iterate until pulses is all equal to zero.
   # This will tell us how many of the periodicities do we need to explain the entire content of pulses.
-  pulses_copy = np.array(input_signal, copy=True)
+  peak_stem = np.zeros(len(input_signal))
+  for i in range(0, len(peak_positions)):
+    peak_stem[peak_positions[i]] = 1
+
+  pulses_copy = np.array(peak_stem, copy=True)
   w = 0
   while not (pulses_copy <= peak_threshold).all() and w < len(periodicities): # until all values in pulses aren't zeros ########### INSERT TOLERANCE #############
     pulses_copy[np.arange(periodicities[w][1], len(pulses_copy), periodicities[w][0])] = 0
     w = w+1
   if verbose == True: 
     print(pulses_copy)
-    plot_signal(pulses_copy, 1, 'Complex novelty function of z', 'C2')
 
   return periodicities[0:w]
 
+################################
+####### DRIVER FUNCTION ########
+################################
 
-# Example of function call
+# Reads the audio from audio_filename and writes out the information at json_filename
+def driver_function(audio_filename, json_filename, window_len_seconds=10, verbose=False):
+  # Load the audio track and compute the novelty
+  y, Fs = librosa.core.load(audio_filename)
+  nov_y, Fs_nov_y = compute_novelty_complex(y, Fs=Fs)
 
-#pulses = generate_polyrhythm_impulse_train()
-#periods = periodicities_lookup(pulses, EPS=3, verbose=False)
-#print("Number of periodicities found in the signal:", len(periods))
-#for period in periods:
-#  print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
+  # Define the empty data structure of the JSON
+  rhythmDict =	{"n_windows": 0, "window_timings": [], "window_content": []}
 
+  # Populate the data structure
+  hop_factor = round(window_len_seconds*Fs/(Fs/Fs_nov_y))
+  window_start = -hop_factor
+  window_end = 0
+  window_ctr = -1
+  # For each non-overlapping 10-seconds window of the novelty function:
+  while window_end < (len(nov_y)-hop_factor*2):
+    # Set the current window
+    window_start += hop_factor
+    window_end += hop_factor
+    window_ctr += 1
+
+    if verbose == True: print("window_start: %i, window_end: %i, len(nov_y): %i" %(window_start, window_end, len(nov_y)))
+    rhythmDict["window_timings"].append({"start":window_start*(Fs/Fs_nov_y)/Fs, "end":window_end*(Fs/Fs_nov_y)/Fs})
+    rhythmDict["window_content"].append([])
+
+    # Find the periodicities in the current window
+    periods = periodicities_lookup(nov_y[window_start:window_end], peak_threshold=0.1, EPS=10, verbose=False)
+
+    # Append them to the data structure
+    if verbose == True: print("Number of periodicities found in window [%i]: %i" %(window_ctr, len(periods)) )
+    for period in periods[0:4]:
+      if verbose == True: print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
+      current_periodicity_BPM = 60/((period[0]*(Fs/Fs_nov_y))/Fs)
+      current_periodicity_offset_sec = (period[1]*(Fs/Fs_nov_y))/Fs
+      rhythmDict["window_content"][window_ctr].append({"BPM":current_periodicity_BPM, "offset":current_periodicity_offset_sec})
+    if verbose == True: print("\n")
+
+  rhythmDict["n_windows"] = window_ctr+1
+
+  # Write the data structure to the json file
+  with open(json_filename, 'w') as outfile:
+    json.dump(rhythmDict, outfile)
+
+
+###############################
+######## EXAMPLE USAGE ########
+###############################
+
+driver_function("muzak_drums.wav", # Path to audio file
+                "inputRhythms.json" # Path to JSON where the rhythm analysis is stored
+                )
