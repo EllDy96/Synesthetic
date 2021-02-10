@@ -120,13 +120,16 @@ class Block {
 
   displayCircle(color_pass) {
     fill(color_pass)
-    square(this.x, this.y,this.dim1,this.radius);
-    this.radius+=3;
+    rect(this.x, this.y, this.dim1, this.dim2, this.radius);
+    this.radius += 2;
   }
   displayRect(color_pass) {
-    this.radius = 0;
+
+    this.radius -= 0.1;
+    if (this.radius <= 0)
+      this.radius = 0;
     fill(color_pass)
-    rect(this.x, this.y, this.dim1, this.dim2);
+    rect(this.x, this.y, this.dim1, this.dim2, this.radius);
   }
 }
 
