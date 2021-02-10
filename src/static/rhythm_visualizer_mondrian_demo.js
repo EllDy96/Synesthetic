@@ -130,7 +130,7 @@ var exceed_elem;
 function preload() 
 {  
   loadJSON('assets/inputRhythms.json', storeJSON);
-  mySound = new Tone.Player("assets/clicktrack.wav").toDestination();  
+  mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();  
 }
 function storeJSON(data)
 {
