@@ -82,7 +82,7 @@ let canvas_width = 1200;
 function preload() 
 {  
   loadJSON('assets/inputRhythms.json', storeJSON);
-  mySound = new Tone.Player("assets/clicktrack.wav").toDestination();  
+  mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();  
 }
 function storeJSON(data)
 {
@@ -161,6 +161,8 @@ function setup()
 var diam = 150;
 let fill_1 = 0;
 let fill_2 = 0;
+let fill_3 = 0;
+let fill_4 = 0;
 
 
 function draw()
@@ -241,9 +243,47 @@ function draw()
     {
       background(127,127,0);
 
+      if(current_rhythm_properties.rhythm_isStruck[0]==true)
+      {
+        console.log("RHYTHM 1/4 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[0]=false;
+        fill_1 = 255-fill_1;
+        //fill_1 = getRandomColor(3);
+      }
+      // If only the second rhythm has been struck ...
+      else if(current_rhythm_properties.rhythm_isStruck[1]==true)
+      {
+        console.log("RHYTHM 2/4 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[1]=false;
+        fill_2 = 255-fill_2;
+        //fill_2 = getRandomColor(3);
+      }
+      else if(current_rhythm_properties.rhythm_isStruck[2]==true)
+      {
+        console.log("RHYTHM 3/4 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[2]=false;
+        fill_3 = 255-fill_3;
+        //fill_2 = getRandomColor(3);
+      }
+      else if(current_rhythm_properties.rhythm_isStruck[3]==true)
+      {
+        console.log("RHYTHM 4/4 STRUCK")
+        current_rhythm_properties.rhythm_isStruck[3]=false;
+        fill_4 = 255-fill_4;
+        //fill_2 = getRandomColor(3);
+      }
+
+
+      fill(fill_1);
       ellipse(width/5,height/2, diam, diam); 
+
+      fill(fill_2);
       ellipse(2*width/5,height/2, diam, diam); 
+
+      fill(fill_3);
       ellipse(3*width/5,height/2, diam, diam);
+
+      fill(fill_4);
       ellipse(4*width/5,height/2, diam, diam); 
     }
     else
