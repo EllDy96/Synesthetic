@@ -2,7 +2,6 @@
  *****************************MODEL*******************************************************************************************
  */
 
-
 var color_palette = [
   "#d24632",
   "#f5e132",
@@ -19,6 +18,8 @@ var rnd_color;
 var c_;
 var curr_block;
 var displayCircles = false;
+let toggleCirle = false;
+
 /*
  *****************************VIEW*******************************************************************************************
  */
@@ -49,16 +50,7 @@ function setup() {
     fillOnColumns(x, width - x)
   }
 
-  //diagonale principale ->primi n mondrian con dimensioni random
-  // for (i=0; x<width && y<height; i++){
-  //   rnd_color = random(color_palette);
-  //   blocks[i] = new Block(x,y, currWidth, currHeight, rnd_color);
-  //   x = x + currWidth;
-  //   y = y + currHeight;
-  //   currWidth=random(sizes);
-  //   currHeight=random(sizes);
-  // }
-  //still setup bruh
+
   c1 = color(204, 102, 0); //orange
   c2 = color(0, 102, 153); //blue
   c3 = color(224, 175, 238);
@@ -71,13 +63,11 @@ function setup() {
 function draw() {
   for (let i = 0; i < blocks.length; i++) {
     // displayCircle is the variable to check if we want to draw cirle of rectangle 
-    if (!displayCircles) {
-      blocks[i].displayRect(blocks[i].color);
-    } else {
-      blocks[i].displayCircle(blocks[i].color);
-    }
-
-    //blocks[i].display(blocks[i].color);
+    // blocks[i].toggleCircleAnimation(toggleCirle);  
+    blocks[i].toggleCircleAnimation(toggleCirle);
+    blocks[i].displayShape(blocks[i].color); 
+    
+    
   }
 
   s = s + 0.1;
@@ -91,11 +81,8 @@ function setGradient(s, k) {
     if (blocks[i].color == color_palette[0]) {
       let c_ = color(blocks[i].color);
       let c = lerpColor(c1, c_, k);
-      if (!displayCircles) {
-        blocks[i].displayRect(c);
-      } else {
-        blocks[i].displayCircle(c);
-      }
+      blocks[i].displayShape(c); 
+      
     }
   }
   pop()
@@ -114,22 +101,45 @@ class Block {
     this.dim2 = dim_2;
     this.color = color;
     this.area = (this.dim1 * this.dim2);
-    this.radius = 0;
+    this.angularRadius = 0;
+    this.maxRadius = this.dim1;
+    this.radiusOffset = 0;
+    this.speed = 0.03;
+    
   }
   //functionalities
-
-  displayCircle(color_pass) {
+  displayShape(color_pass) {
     fill(color_pass)
-    rect(this.x, this.y, this.dim1, this.dim2, this.radius);
-    this.radius += 2;
+    rect(this.x, this.y, this.dim1, this.dim2, this.angularRadius);
   }
-  displayRect(color_pass) {
+  toggleCircleAnimation(toggle) {
+    if (toggle){
+      this.squareToCircle();
+    }
 
-    this.radius -= 0.1;
-    if (this.radius <= 0)
-      this.radius = 0;
-    fill(color_pass)
-    rect(this.x, this.y, this.dim1, this.dim2, this.radius);
+    if (!toggle) {
+      this.circleToSquare();
+    }
+
+  }
+  
+  squareToCircle() {
+    if (this.radiusOffset < 1) {
+      this.radiusOffset += this.speed;
+      console.log("this is radisOffset: ", this.radiusOffset," and angularRadius: ", this.angularRadius)
+      this.angularRadius = this.radiusOffset * this.maxRadius;
+    } else {
+      this.radiusOffset = 1;
+    }
+  }
+  circleToSquare() {
+    if (this.radiusOffset > 0.01) {
+      this.radiusOffset -= this.speed;
+      console.log("this is radisOffset: ", this.radiusOffset," and angularRadius: ", this.angularRadius)
+      this.angularRadius = this.radiusOffset * this.maxRadius;
+    } else {
+      this.radiusOffset = 0;
+    }
   }
 }
 
