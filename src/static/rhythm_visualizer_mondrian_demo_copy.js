@@ -1,23 +1,22 @@
-/*****************************************************
- *****************************************************
- *********** HELPER FUNCTIONS DEFINITION *************
- *****************************************************
- *****************************************************/
+/******************************************************************************************
+ ********************************                      ************************************
+ ********************************   HELPER FUNCTIONS   ************************************
+ ********************************                      ************************************
+ ******************************************************************************************/
 
 function getRandomColor(brightness)
 {
   // Six levels of brightness from 0 to 5, 0 being the darkest
-  warmrgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
-  warmmix = [brightness * 51, brightness * 51, brightness * 51]; //51 => 255/5
-  warmmixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) { return Math.round(x / 2.0) })
+  rgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
+  mix = [brightness * 51, brightness * 51, brightness * 51]; //51 => 255/5
+  mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) { return Math.round(x / 2.0) })
   return "rgb(" + mixedrgb.join(",") + ")";
 }
 
 
-
 function shuffle_array(array) //Fisher-Yates Shuffle algorhythm 
 {
-  warmcurrentIndex = array.length, temporaryValue, randomIndex;
+  currentIndex = array.length, temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex)
@@ -32,20 +31,19 @@ function shuffle_array(array) //Fisher-Yates Shuffle algorhythm
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
 }
 
 
 
 
-/********************************************
- ********************************************
- *********** CLASSES DEFINITION *************
- ********************************************
- ********************************************/
+/************************************************************************************************
+ ***********************************                        *************************************
+ ***********************************   CLASSES DEFINITION   *************************************
+ ***********************************                        ***********************+*************
+ ************************************************************************************************/
 
-// The draw_properties class contains the up-to-date rhythmic information of the piece.
+// The rhythm_properties class contains the up-to-date rhythmic information of the piece.
 // The updates are monitored by the loop of the draw() function.
 // The updates are scheduled with the Tone.Transport.Schedule() function.
 class rhythm_properties
@@ -121,6 +119,7 @@ class rhythm_properties
   }
 };
 
+// Building blocks of the mondrian-like composition.
 class Block
 {
   constructor(x, y, dim_1, dim_2, color)
@@ -141,6 +140,8 @@ class Block
 
 }
 
+// The MondrianBlocks class is responsible for the mondrian-like composition.
+
 class MondrianBlocks
 {
   constructor(stroke_dim, height, width, sizes, color_palette_warm, color_palette_cold)
@@ -154,6 +155,7 @@ class MondrianBlocks
     this.color_palette_cold = color_palette_cold;
   }
 
+  // Assigns a color to every block of the composition
   color_assignment()
   {
     let tot_area = 0;
@@ -176,9 +178,35 @@ class MondrianBlocks
     }
   }
 
-  update_color(passed_color, pulse_var)
+  // REASSIGN
+  // REASSIGNS a color to every block of the composition
+  color_reassignment()
   {
-    //console.log("IM HERE")
+    let tot_area = 0;
+    for (let i = 0; i < this.blocks.length; i++)
+    {
+      tot_area += this.blocks[i].area;
+    }
+    let avg_area = tot_area / this.blocks.length;
+
+    for (let i = 0; i < this.blocks.length; i++)
+    {
+      if (this.blocks[i].area > avg_area)
+      { //big blocks <-> cold colors
+        this.blocks[i].color = random(this.color_palette_cold)
+      } 
+      else
+      {  //small blocks <-> warm colors
+        this.blocks[i].color = random(this.color_palette_warm)
+      }
+    }
+  }
+
+  // Temporarily (!) updates the color of the blocks which have color==passed_color.
+  // The color of those blocks is shifted towards color color_pulse_to based on the factor color_shift_coefficient.
+  // color_shift_coefficient is a parameter in range [0,1]
+  update_color(passed_color, color_shift_coefficient)
+  {
     for (let i = 0; i < this.blocks.length; i++)
     {
       //console.log("comparing ", this.blocks[i].color, " with ", passed_color)
@@ -186,16 +214,17 @@ class MondrianBlocks
       {        
         //push()
         let color_pulse_from = color(this.blocks[i].color);
-        let next_color = lerpColor(color_pulse_from, color(color_pulse_to), pulse_var); //pulse warmis just a parameter btw 0 : 1
+        let next_color = lerpColor(color_pulse_from, color(color_pulse_to), color_shift_coefficient);
         this.blocks[i].display(next_color);
         //pop()
       }
-      else
+      /*else
       {
         this.blocks[i].display(this.blocks[i].color);
-      }
+      }*/
     }
   }
+
 
   draw_mondrian()
   {
@@ -208,7 +237,6 @@ class MondrianBlocks
   generate_mondrian()
   {
     strokeWeight(this.stroke_dim);
-    let i = 0;
     let x = 0;
     let y = 0;
     let currWidth = random(this.sizes);
@@ -236,37 +264,15 @@ class MondrianBlocks
     }
   }
 
-  pulsate_blocks(pulse_var, num_rhythms, color_pulse_to)
-  {
-    let j = 0;
-    while (j < num_rhythms) //ad ogni ritmo associo un colore
-    {
-      for (i = 0; i < blocks.length; i++)
-      {
-        //primi due ritmi associati ai colori freddi, terzo e quarto associato a colori caldi;
-        if (blocks[i].color == color_palette_merged[j])
-        {
-          //push()
-          let color_pulse_from = color(blocks[i].color);
-          let c = lerpColor(color_pulse_to, color_pulse_from, pulse_var); //pulse warmis just a parameter btw 0 : 1
-          blocks[i].display(c);
-          //pop()
-        }
-      }
-      j += 1;
-    }
-  }
-
-  // Helper methods called by generate_mondrian()
+  // Private-like methods
   fillOnRows(y, currHeight)
   {
     let currWidth = random(this.sizes);
     let curr_block;
-    x = 0;
+    let x = 0;
 
     while (x + currWidth + this.stroke_dim < this.width)
     {
-      //rnd_color = random(color_palette);
       curr_block = new Block(x, y, currWidth, currHeight);
       this.blocks.push(curr_block);
       x = x + currWidth;
@@ -281,11 +287,10 @@ class MondrianBlocks
   {
     let currHeight = random(this.sizes);
     let curr_block;
-    y = 0;
+    let y = 0;
 
     while (y + currHeight + this.stroke_dim < this.height)
     {
-      //rnd_color = random(color_palette);
       curr_block = new Block(x, y, currWidth, currHeight);
       this.blocks.push(curr_block)
       y = y + currHeight;
@@ -299,18 +304,18 @@ class MondrianBlocks
 
 
 
-/******************************************
- ******************************************
- *********** GLOBAL VARIABLES *************
- ******************************************
- ******************************************/
+/************************************************************************************************
+ ************************************                      **************************************
+ ************************************   GLOBAL VARIABLES   **************************************
+ ************************************                      **************************************
+ ************************************************************************************************/
 
 let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
 let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
-let canvas_height = 750;
-let canvas_width = 1200;
+
+const color_pulse_to = "#ffffff"; // Target color of the pulse animation
 const color_palette_warm =
   [
     "#d24632", //rosso
@@ -325,23 +330,44 @@ const color_palette_cold =
     //"#3278aa", //blu
     //"#40826d", //verde veronese
   ];
-const color_pulse_to = "#ffffff";
-let x, y, dim1, dim2, b1, b2, numblocks;
-let pulse_warm= 0;
-let s = 0;
-const sizes = [50, 100, 100, 150, 150, 200, 250, 300, 350, 400]; // old: [50, 100, 150, 200];
-let flag_animation = true;
-let flag_pulsation = false;
+
+const sizes = [50, 100, 100, 150, 150, 250, 300]; // Sizes of the block comprising the mondrian-like composition
 let mondrian_blocks;
 
+// For rhythm 0
+let color_shift_coefficient = 0;
+let s = 0;
+let flag_animation = true;
+let flag_pulsation = false;
+
+// For rhythm 1
+let color_shift_coefficient1 = 0;
+let s1 = 0;
+let flag_animation1 = true;
+let flag_pulsation1 = false;
+
+// For rhythm 2
+let color_shift_coefficient2 = 0;
+let s2 = 0;
+let flag_animation2 = true;
+let flag_pulsation2 = false;
+
+// For rhythm 3
+let color_shift_coefficient3 = 0;
+let s3 = 0;
+let flag_animation3 = true;
+let flag_pulsation3 = false;
 
 
 
-/************************************************
- ************************************************
- *********** DATA LOADING AND SETUP *************
- ************************************************
- ************************************************/
+
+
+
+/************************************************************************************************
+ ********************************                            ************************************
+ ********************************   DATA LOADING AND SETUP   ************************************
+ ********************************                            ************************************
+ ************************************************************************************************/
 
 // Load the audio file and the JSON file
 function preload()
@@ -358,13 +384,15 @@ function storeJSON(data)
 // Initialize the canvas and schedule the addCue calls upon the audio file
 function setup()
 {
+  // SET THE TARGET FPS
   frameRate(60);
+
   // INITIALIZE THE CANVAS
   createCanvas(windowHeight, windowHeight);
   mondrian_blocks = new MondrianBlocks(10, height, width, sizes, color_palette_warm, color_palette_cold);
-  mondrian_blocks.generate_mondrian(); // generates the blocks
-  mondrian_blocks.color_assignment(); // assigns a color to every block
-  mondrian_blocks.draw_mondrian(); // draws the blocks
+  mondrian_blocks.generate_mondrian(); // generate the blocks
+  mondrian_blocks.color_assignment(); // assign a color to every block
+  mondrian_blocks.draw_mondrian(); // draw the blocks
   
 
   // SCHEDULE THE Tone.Transport CALLS
@@ -420,9 +448,21 @@ function setup()
 
 
 
+
+/************************************************************************************************
+ *************************************                   ****************************************
+ *************************************   VISUALIZATION   ****************************************
+ *************************************                   ****************************************
+ ************************************************************************************************/
+
 function draw()
 {
-  let pulse_var = sin(s)*sin(s) //variable that is passed to lerpColor, defines the color variation aka pulsation
+  // Recalculate the coefficients
+  color_shift_coefficient = sin(s)*sin(s) //variable that is passed to lerpColor, defines the color variation aka pulsation
+  color_shift_coefficient1 = sin(s1)*sin(s1)
+  color_shift_coefficient2 = sin(s2)*sin(s2)
+  color_shift_coefficient3 = sin(s3)*sin(s3)
+
   if (current_rhythm_properties.n_rhythms == 0)
   {
     //clear();
@@ -439,13 +479,13 @@ function draw()
         // Set the flag back to false
         //current_rhythm_properties.rhythm_isStruck[0] = false;
         console.log("RHYTHM 1/1 STRUCK");
-        //one shot pulsation
-        if(flag_pulsation == false && pulse_var> 0.5)
+        // One-shot pulsation
+        if(flag_pulsation == false && color_shift_coefficient> 0.5)
         {
           flag_pulsation = true;
           flag_animation = true;
         }
-        else if(flag_pulsation == true && pulse_var< 0.1)
+        else if(flag_pulsation == true && color_shift_coefficient< 0.1)
         {
           console.log("terminating animation")
           flag_animation = false;
@@ -454,7 +494,7 @@ function draw()
         if(flag_animation==true)
         {
           console.log("changing color ", color_palette_warm[0]);
-          mondrian_blocks.update_color(color_palette_warm[0], pulse_var);
+          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
           s = s + 0.3;
         }
         else
@@ -470,65 +510,269 @@ function draw()
     // TWO RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 2)
     {
-      for (let i = 0; i < blocks.length; i++)
-      {
-        blocks[i].display(color(blocks[i].color));
-      }
-      // If both rhythms have been struck at the same time ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true && current_rhythm_properties.rhythm_isStruck[1] == true)
-      {
-        console.log("RHYTHMS 1/2 AND 2/2 STRUCK")
-        current_rhythm_properties.rhythm_isStruck[0] = false;
-        current_rhythm_properties.rhythm_isStruck[1] = false;
-        if(flag_pulsation == false && pulse_warm> 0.5){
-          flag_pulsation = true;
-          flag_animation = true;
-        }else if(flag_pulsation == true && pulse_warm< 0.1){
-          flag_animation = false;
-        }
-        if(flag_animation==true){
-          pulsation(pulse_var, 1, 1)
-          s = s + 0.5;
-        }
-     
-        pulsation(pulse_var, 2, 2)
-      }
       // If only the first rhythm has been struck ...
-      else if (current_rhythm_properties.rhythm_isStruck[0] == true)
+      if (current_rhythm_properties.rhythm_isStruck[0] == true)
       {
         console.log("RHYTHM 1/2 STRUCK")
-        current_rhythm_properties.rhythm_isStruck[0] = false;
-        pulsation(pulse_var, 2, 1);
-        //fill_1 = getRandomColor(3);
+        if(flag_pulsation == false && color_shift_coefficient> 0.5)
+        {
+          flag_pulsation = true;
+          flag_animation = true;
+        }
+        else if(flag_pulsation == true && color_shift_coefficient< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation = false;
+          current_rhythm_properties.rhythm_isStruck[0] = false;
+        }
+        if(flag_animation==true)
+        {
+          console.log("changing color ", color_palette_warm[0]);
+          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
+          flag_animation = true;
+          flag_pulsation = false;
+          s = 0;
+        }
       }
       // If only the second rhythm has been struck ...
       else if (current_rhythm_properties.rhythm_isStruck[1] == true)
       {
         console.log("RHYTHM 2/2 STRUCK")
-        current_rhythm_properties.rhythm_isStruck[1] = false;
-        pulsation(pulse_var, 1);
-        //fill_2 = getRandomColor(3);
+        if(flag_pulsation1 == false && color_shift_coefficient1> 0.5)
+        {
+          flag_pulsation1 = true;
+          flag_animation1 = true;
+        }
+        else if(flag_pulsation1 == true && color_shift_coefficient1< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation1 = false;
+          current_rhythm_properties.rhythm_isStruck[1] = false;
+        }
+        if(flag_animation1==true)
+        {
+          console.log("changing color ", color_palette_warm[1]);
+          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
+          flag_animation1 = true;
+          flag_pulsation1 = false;
+          s1 = 0;
+        }
       }
     }
+
     // THREE RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 3)
     {
-      for (let i = 0; i < blocks.length; i++)
+      // If only the first rhythm has been struck ...
+      if (current_rhythm_properties.rhythm_isStruck[0] == true)
       {
-        blocks[i].display(color(blocks[i].color));
+        console.log("RHYTHM 1/3 STRUCK")
+        if(flag_pulsation == false && color_shift_coefficient> 0.5)
+        {
+          flag_pulsation = true;
+          flag_animation = true;
+        }
+        else if(flag_pulsation == true && color_shift_coefficient< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation = false;
+          current_rhythm_properties.rhythm_isStruck[0] = false;
+        }
+        if(flag_animation==true)
+        {
+          console.log("changing color ", color_palette_warm[0]);
+          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
+          flag_animation = true;
+          flag_pulsation = false;
+          s = 0;
+        }
       }
-      pulsation(pulse_var, 3);
-
+      // If only the second rhythm has been struck ...
+      else if (current_rhythm_properties.rhythm_isStruck[1] == true)
+      {
+        console.log("RHYTHM 2/3 STRUCK")
+        if(flag_pulsation1 == false && color_shift_coefficient1> 0.5)
+        {
+          flag_pulsation1 = true;
+          flag_animation1 = true;
+        }
+        else if(flag_pulsation1 == true && color_shift_coefficient1< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation1 = false;
+          current_rhythm_properties.rhythm_isStruck[1] = false;
+        }
+        if(flag_animation1==true)
+        {
+          console.log("changing color ", color_palette_warm[1]);
+          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
+          flag_animation1 = true;
+          flag_pulsation1 = false;
+          s1 = 0;
+        }
+      }
+      // If only the third rhythm has been struck...
+      else if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      {
+        console.log("RHYTHM 3/3 STRUCK")
+        if(flag_pulsation2 == false && color_shift_coefficient2> 0.5)
+        {
+          flag_pulsation2 = true;
+          flag_animation2 = true;
+        }
+        else if(flag_pulsation2 == true && color_shift_coefficient2< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation2 = false;
+          current_rhythm_properties.rhythm_isStruck[2] = false;
+        }
+        if(flag_animation2==true)
+        {
+          console.log("changing color ", color_palette_cold[0]);
+          mondrian_blocks.update_color(color_palette_cold[0], color_shift_coefficient2);
+          s2 = s2 + 0.5;
+        }
+        else
+        {
+          flag_animation2 = true;
+          flag_pulsation2 = false;
+          s2 = 0;
+        }
+      }
     }
+
+
     // FOUR RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 4)
     {
-      for (let i = 0; i < blocks.length; i++)
+      // If only the first rhythm has been struck ...
+      if (current_rhythm_properties.rhythm_isStruck[0] == true)
       {
-        blocks[i].display(color(blocks[i].color));
+        console.log("RHYTHM 1/4 STRUCK")
+        if(flag_pulsation == false && color_shift_coefficient> 0.5)
+        {
+          flag_pulsation = true;
+          flag_animation = true;
+        }
+        else if(flag_pulsation == true && color_shift_coefficient< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation = false;
+          current_rhythm_properties.rhythm_isStruck[0] = false;
+        }
+        if(flag_animation==true)
+        {
+          console.log("changing color ", color_palette_warm[0]);
+          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
+          flag_animation = true;
+          flag_pulsation = false;
+          s = 0;
+        }
       }
-      pulsation(pulse_var, 4);
-      current_rhythm_properties.reset_flags();
+      // If only the second rhythm has been struck ...
+      else if (current_rhythm_properties.rhythm_isStruck[1] == true)
+      {
+        console.log("RHYTHM 2/4 STRUCK")
+        if(flag_pulsation1 == false && color_shift_coefficient1> 0.5)
+        {
+          flag_pulsation1 = true;
+          flag_animation1 = true;
+        }
+        else if(flag_pulsation1 == true && color_shift_coefficient1< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation1 = false;
+          current_rhythm_properties.rhythm_isStruck[1] = false;
+        }
+        if(flag_animation1==true)
+        {
+          console.log("changing color ", color_palette_warm[1]);
+          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
+          flag_animation1 = true;
+          flag_pulsation1 = false;
+          s1 = 0;
+        }
+      }
+      // If only the third rhythm has been struck...
+      else if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      {
+        console.log("RHYTHM 3/4 STRUCK")
+        if(flag_pulsation2 == false && color_shift_coefficient2> 0.5)
+        {
+          flag_pulsation2 = true;
+          flag_animation2 = true;
+        }
+        else if(flag_pulsation2 == true && color_shift_coefficient2< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation2 = false;
+          current_rhythm_properties.rhythm_isStruck[2] = false;
+        }
+        if(flag_animation2==true)
+        {
+          console.log("changing color ", color_palette_cold[0]);
+          mondrian_blocks.update_color(color_palette_cold[0], color_shift_coefficient2);
+          s2 = s2 + 0.5;
+        }
+        else
+        {
+          flag_animation2 = true;
+          flag_pulsation2 = false;
+          s2 = 0;
+        }
+      }
+      // If only the fourth rhythm has been struck...
+      else if (current_rhythm_properties.rhythm_isStruck[3] == true)
+      {
+        console.log("RHYTHM 4/4 STRUCK")
+        if(flag_pulsation3 == false && color_shift_coefficient3> 0.5)
+        {
+          flag_pulsation3 = true;
+          flag_animation3 = true;
+        }
+        else if(flag_pulsation3 == true && color_shift_coefficient3< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation3 = false;
+          current_rhythm_properties.rhythm_isStruck[3] = false;
+        }
+        if(flag_animation3==true)
+        {
+          console.log("changing color ", color_palette_cold[1]);
+          mondrian_blocks.update_color(color_palette_cold[1], color_shift_coefficient3);
+          s3 = s3 + 0.5;
+        }
+        else
+        {
+          flag_animation3 = true;
+          flag_pulsation3 = false;
+          s3 = 0;
+        }
+      }
     }
     else
     {
@@ -542,11 +786,11 @@ function draw()
 
 
 
-/***************************************
- ***************************************
- ************* CONTROLLER **************
- ***************************************
- ***************************************/
+/************************************************************************************************
+ *************************************                *******************************************
+ *************************************   CONTROLLER   *******************************************
+ *************************************                *******************************************
+ ************************************************************************************************/
 
 const btnPlay = document.querySelector("#btn-play");
 btnPlay.addEventListener("click", play);
