@@ -1,15 +1,18 @@
 /*
  *****************************MODEL*******************************************************************************************
  */
-
-var color_palette = [
+// toggleCircle= !toggleCircle // toggle of the variable that control the squareToCircle animation
+//         for(let block of blocks){
+//           block.toggleCircleAnimation(toggleCircle);
+//         } 
+var color_palette = 
+[
   "#d24632",
   "#f5e132",
   "#3278aa",
   "#ffffff",
   "#ffffff"
 ];
-
 let x, y, dim1, dim2, b1, b2, numblocks;
 let c1, c2, c3, c4, k, s;
 var blocks = []; //array containing the blocks
@@ -17,7 +20,6 @@ var sizes = [50, 150, 200, 250, 300, 350, 400]; // old: [50, 100, 150, 200];
 var rnd_color;
 var c_;
 var curr_block;
-var displayCircles = false;
 let toggleCirle = false;
 
 /*
@@ -65,9 +67,9 @@ function draw() {
     // displayCircle is the variable to check if we want to draw cirle of rectangle 
     // blocks[i].toggleCircleAnimation(toggleCirle);  
     blocks[i].toggleCircleAnimation(toggleCirle);
-    blocks[i].displayShape(blocks[i].color); 
-    
-    
+    blocks[i].display(blocks[i].color);
+
+
   }
 
   s = s + 0.1;
@@ -81,8 +83,8 @@ function setGradient(s, k) {
     if (blocks[i].color == color_palette[0]) {
       let c_ = color(blocks[i].color);
       let c = lerpColor(c1, c_, k);
-      blocks[i].displayShape(c); 
-      
+      blocks[i].display(c);
+
     }
   }
   pop()
@@ -105,15 +107,15 @@ class Block {
     this.maxRadius = this.dim1;
     this.radiusOffset = 0;
     this.speed = 0.03;
-    
+
   }
   //functionalities
-  displayShape(color_pass) {
+  display(color_pass) {
     fill(color_pass)
     rect(this.x, this.y, this.dim1, this.dim2, this.angularRadius);
   }
   toggleCircleAnimation(toggle) {
-    if (toggle){
+    if (toggle) {
       this.squareToCircle();
     }
 
@@ -122,11 +124,11 @@ class Block {
     }
 
   }
-  
+
   squareToCircle() {
     if (this.radiusOffset < 1) {
       this.radiusOffset += this.speed;
-      console.log("this is radisOffset: ", this.radiusOffset," and angularRadius: ", this.angularRadius)
+      console.log("this is radisOffset: ", this.radiusOffset, " and angularRadius: ", this.angularRadius)
       this.angularRadius = this.radiusOffset * this.maxRadius;
     } else {
       this.radiusOffset = 1;
@@ -135,7 +137,7 @@ class Block {
   circleToSquare() {
     if (this.radiusOffset > 0.01) {
       this.radiusOffset -= this.speed;
-      console.log("this is radisOffset: ", this.radiusOffset," and angularRadius: ", this.angularRadius)
+      console.log("this is radisOffset: ", this.radiusOffset, " and angularRadius: ", this.angularRadius)
       this.angularRadius = this.radiusOffset * this.maxRadius;
     } else {
       this.radiusOffset = 0;

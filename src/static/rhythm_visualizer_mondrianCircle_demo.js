@@ -4,25 +4,46 @@
  *****************************************************
  *****************************************************/
 
-function getRandomColor(brightness)
-{
+
+// Algorithm that compute the binomial (n over k):  compute all the possible subsets of an array n each of length k
+function combine(array, size) {
+
+  function c(part, start) {
+    var result = [],
+      i, l, p;
+    for (i = start, l = array.length; i < l; i++) {
+      p = part.slice(0); // get a copy of part
+      p.push(array[i]); // add the iterated element to p
+      if (p.length < size) { // test if recursion can go on
+        result = result.concat(c(p, i + 1)); // call c again & concat rresult
+      } else {
+        result.push(p); // push p to result, stop recursion
+      }
+    }
+    return result;
+  }
+
+  return c([], 0);
+}
+// If you want to try it:
+//console.log(combine(["a", "b", "c", "d"], 2));
+
+function getRandomColor(brightness) {
   // Six levels of brightness from 0 to 5, 0 being the darkest
   var rgb = [Math.random() * 256, Math.random() * 256, Math.random() * 256];
   var mix = [brightness * 51, brightness * 51, brightness * 51]; //51 => 255/5
-  var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) { return Math.round(x / 2.0) })
+  var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function (x) {
+    return Math.round(x / 2.0)
+  })
   return "rgb(" + mixedrgb.join(",") + ")";
 }
 
-function pulsation(pulse_var, num_rhythms)
-{
+function pulsation(pulse_var, num_rhythms) {
   var j = 0;
-  while (j < num_rhythms)
-  {
-    for (i = 0; i < blocks.length; i++)
-    {
+  while (j < num_rhythms) {
+    for (i = 0; i < blocks.length; i++) {
       //primi due ritmi associati ai colori freddi, terzo e quarto associato a colori caldi;
-      if (blocks[i].color == color_palette_merged[j])
-      {
+      if (blocks[i].color == color_palette_merged[j]) {
         push()
         let color_pulse = color(blocks[i].color);
         let c = lerpColor(c_pulse, color_pulse, pulse_var);
@@ -34,14 +55,10 @@ function pulsation(pulse_var, num_rhythms)
   }
 }
 
-
-
-function fillOnRows(y, currHeight)
-{
+function fillOnRows(y, currHeight) {
   currWidth = random(sizes);
   x = 0;
-  while (x + currWidth + stroke_dim < width)
-  {
+  while (x + currWidth + stroke_dim < width) {
     //rnd_color = random(color_palette);
     curr_block = new Block(x, y, currWidth, currHeight);
     blocks.push(curr_block)
@@ -53,12 +70,11 @@ function fillOnRows(y, currHeight)
   blocks.push(curr_block)
 
 }
-function fillOnColumns(x, currWidth)
-{
+
+function fillOnColumns(x, currWidth) {
   currHeight = random(sizes);
   y = 0;
-  while (y + currHeight + stroke_dim < height)
-  {
+  while (y + currHeight + stroke_dim < height) {
     //rnd_color = random(color_palette);
     curr_block = new Block(x, y, currWidth, currHeight);
     blocks.push(curr_block)
@@ -70,13 +86,14 @@ function fillOnColumns(x, currWidth)
   blocks.push(curr_block)
 
 }
+
 function shuffle_array(array) //Fisher-Yates Shuffle algorhythm 
 {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
-  while (0 !== currentIndex)
-  {
+  while (0 !== currentIndex) {
 
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -91,9 +108,6 @@ function shuffle_array(array) //Fisher-Yates Shuffle algorhythm
   return array;
 }
 
-
-
-
 /********************************************
  ********************************************
  *********** CLASSES DEFINITION *************
@@ -103,68 +117,92 @@ function shuffle_array(array) //Fisher-Yates Shuffle algorhythm
 // The draw_properties class contains the up-to-date rhythmic information of the piece.
 // The updates are monitored by the loop of the draw() function.
 // The updates are scheduled with the Tone.Transport.Schedule() function.
-class rhythm_properties
-{
-  constructor()
-  {
+class rhythm_properties {
+  constructor() {
     this.n_rhythms = 0;
-    this.rhythm_isStruck =
-      [
-        false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-        false, false, false, false, // except in the instant when the corresponding rhythm is struck.
-        false, false, false, false,
-        false, false, false, false,
-      ];
+    // this.rhythm_isStruck =
+    //   [
+    //     false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
+    //     false, false, false, false, // except in the instant when the corresponding rhythm is struck.
+    //     false, false, false, false,
+    //     false, false, false, false,
+    //   ];
+    this.rhythm_isStruck = [
+      false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
+      // except in the instant when the corresponding rhythm is struck.
+    ];
   }
 
-  update(args)
-  {
+  update(args) {
     // Update the number of rhythms only if it's a different value
-    if (this.n_rhythms != args._n_rhythms)
-    {
+    if (this.n_rhythms != args._n_rhythms) {
       this.n_rhythms = args._n_rhythms;
-      console.log(this.n_rhythms)
+      console.log("Number of rythms: ", this.n_rhythms)
     }
     // Trigger the rhythm which has been struck
     this.rhythm_isStruck[args._struck_rhythm_idx] = true;
   }
 
-  reset_flags()
-  {
-    this.rhythm_isStruck =
-      [
-        false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-        false, false, false, false, // except in the instant when the corresponding rhythm is struck.
-        false, false, false, false,
-        false, false, false, false,
-      ];
+  reset_flags() {
+    this.rhythm_isStruck = [
+      false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
+     // except in the instant when the corresponding rhythm is struck.
+    ];
   }
 
-  print()
-  {
+  print() {
     console.log("n_rhythms: ", this.n_rhythms, " rhythm_isStruck: ", this.rhythm_isStruck);
   }
 };
 
-class Block
-{
+class Block {
   //constructor
-  constructor(x, y, dim_1, dim_2, color)
-  {
+  constructor(x, y, dim_1, dim_2, color) {
     this.x = x;
     this.y = y;
     this.dim1 = dim_1;
     this.dim2 = dim_2;
     this.color = color;
     this.area = (this.dim1 * this.dim2);
+    this.angularRadius = 0;
+    this.maxRadius = this.dim1;
+    this.radiusOffset = 0;
+    this.speed = 0.03;
   }
   //functionalities
-  display(color_pass)
-  {
+  display(color_pass) {
     fill(color_pass)
-    rect(this.x, this.y, this.dim1, this.dim2)
+    rect(this.x, this.y, this.dim1, this.dim2, this.angularRadius);
+  }
+  toggleCircleAnimation(toggle) {
+    if (toggle) {
+      this.squareToCircle();
+    }
+
+    if (!toggle) {
+      this.circleToSquare();
+    }
+
   }
 
+  squareToCircle() {
+    if (this.radiusOffset < 1) {
+      this.radiusOffset += this.speed;
+      //console.log("this is radisOffset: ", this.radiusOffset, " and angularRadius: ", this.angularRadius)
+      this.angularRadius = this.radiusOffset * this.maxRadius;
+    } else {
+      this.radiusOffset = 1;
+    }
+  }
+  circleToSquare() {
+    if (this.radiusOffset > 0.01) {
+      this.radiusOffset -= this.speed;
+      //console.log("this is radisOffset: ", this.radiusOffset, " and angularRadius: ", this.angularRadius)
+      this.angularRadius = this.radiusOffset * this.maxRadius;
+    } else {
+      this.radiusOffset = 0;
+    }
+  }
 }
 
 
@@ -175,33 +213,32 @@ class Block
  ******************************************
  ******************************************/
 
+var toggleCircle = false;
 let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
 let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
 let canvas_height = 750;
 let canvas_width = 1200;
-var color_palette_hot =
-  [
-    "#d24632", //rosso
-    "#ffd700", //oro
-    //"#f5e132", //giallo
-    //"#3278aa", //blu
-    //"#ff9900", //arancione
-    //"#500000", //rosso sangue
-    //"#7fffd4", //acquamarina
-    //"#40826d", //verde veronese
-  ];
+var color_palette_hot = [
+  "#d24632", //rosso
+  "#ffd700", //oro
+  //"#f5e132", //giallo
+  //"#3278aa", //blu
+  //"#ff9900", //arancione
+  //"#500000", //rosso sangue
+  //"#7fffd4", //acquamarina
+  //"#40826d", //verde veronese
+];
 
-var color_palette_cold =
-  [
-    "#0096b9", //blu bondi
-    "#7fffd4", //acquamarina
-    //"#ff9900", //arancione
-    //"#500000", //rosso sangue
-    //"#7fffd4", //acquamarina
-    //"#40826d", //verde veronese
-  ];
+var color_palette_cold = [
+  "#0096b9", //blu bondi
+  "#7fffd4", //acquamarina
+  //"#ff9900", //arancione
+  //"#500000", //rosso sangue
+  //"#7fffd4", //acquamarina
+  //"#40826d", //verde veronese
+];
 var color_palette_merged = color_palette_cold.concat(color_palette_hot);
 let x, y, dim1, dim2, b1, b2, numblocks;
 let c1, c2, c3, c4, pulse_var, s;
@@ -213,10 +250,6 @@ var curr_block;
 var stroke_dim;
 var exceed_elem;
 
-
-
-
-
 /************************************************
  ************************************************
  *********** DATA LOADING AND SETUP *************
@@ -224,20 +257,18 @@ var exceed_elem;
  ************************************************/
 
 // Load the audio file and the JSON file
-function preload()
-{
+function preload() {
   loadJSON('assets/inputRhythms.json', storeJSON);
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
 }
-function storeJSON(data)
-{
+
+function storeJSON(data) {
   rhythmic_content = data;
   n_windows = rhythmic_content.n_windows;
 }
 
 // Initialize the canvas and schedule the addCue calls upon the audio file
-function setup()
-{
+function setup() {
   frameRate(60);
   // INITIALIZE THE CANVAS
   createCanvas(windowHeight, windowHeight);
@@ -246,8 +277,7 @@ function setup()
 
   // SCHEDULE THE Tone.Transport CALLS
   // For each window...
-  for (i = 0; i < n_windows; i++)
-  {
+  for (i = 0; i < n_windows; i++) {
     let window_timing = rhythmic_content.window_timings[i]; // Start and end values of the i-th window
     let window_start = window_timing.start; // Start of the current window (seconds)
     let window_end = window_timing.end; // End of the current window (seconds)
@@ -260,8 +290,7 @@ function setup()
       ", window length: ", window_len, ", n_rhythms: ", n_rhythms);
 
     // ... for each rhythm inside the window ...
-    for (j in window_content)
-    {
+    for (j in window_content) {
       let rhythm = window_content[j];
       let period_len = 60.0 / (rhythm.BPM); // Period length of the j-th rhythm (seconds)
 
@@ -275,12 +304,16 @@ function setup()
       console.log("period_len: ", period_len)
 
       // Starting from the first cue, until we reach the end of the i-th window...
-      for (let current_cue = first_cue; current_cue < last_cue; current_cue += period_len)
-      {
+      for (let current_cue = first_cue; current_cue < last_cue; current_cue += period_len) {
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
-        let args = { _struck_rhythm_idx: j, _n_rhythms: n_rhythms }
-        Tone.Transport.schedule(function () { current_rhythm_properties.update(args) }, current_cue);
+        let args = {
+          _struck_rhythm_idx: j,
+          _n_rhythms: n_rhythms
+        }
+        Tone.Transport.schedule(function () {
+          current_rhythm_properties.update(args)
+        }, current_cue);
         // Fallback code below. Please, leave commented.
         /*Tone.Transport.schedule(function({current_cue, j, n_rhythms})
                                   {
@@ -307,19 +340,15 @@ function setup()
   var currWidth = random(sizes);
   var currHeight = random(sizes);
 
-  if (Math.random() < 0.5)
-  { //two methods for creating the mondrian, randomly one of them will be executed for the current generation
-    while (y + currHeight < height)
-    {
+  if (Math.random() < 0.5) { //two methods for creating the mondrian, randomly one of them will be executed for the current generation
+    while (y + currHeight < height) {
       fillOnRows(y, currHeight)
       y = y + currHeight;
       currHeight = random(sizes);
     }
     fillOnRows(y, height - y)
-  } else
-  {
-    while (x + currWidth < width)
-    {
+  } else {
+    while (x + currWidth < width) {
       fillOnColumns(x, currWidth)
       x = x + currWidth;
       currWidth = random(sizes)
@@ -329,19 +358,15 @@ function setup()
   // palette_length = color_palette_hot.length + color_palette_cold.length;
   // n_colors = floor(blocks.length / palette_length);
   var tot_area = 0;
-  for (var i = 0; i < blocks.length; i++)
-  {
+  for (var i = 0; i < blocks.length; i++) {
     tot_area += blocks[i].area;
   }
   var avg_area = tot_area / blocks.length;
 
-  for (var i = 0; i < blocks.length; i++)
-  {
-    if (blocks[i].area < avg_area)
-    { //small blocks <-> cold colors
+  for (var i = 0; i < blocks.length; i++) {
+    if (blocks[i].area < avg_area) { //small blocks <-> cold colors
       blocks[i].color = random(color_palette_cold)
-    } else
-    {  //big blocks <-> hot colors
+    } else { //big blocks <-> hot colors
       blocks[i].color = random(color_palette_hot)
     }
 
@@ -355,33 +380,31 @@ function setup()
   s = 0;
 }
 
+/************************************************
+ ************************************************
+ ****************** DRAW ********************
+ ************************************************
+ ************************************************/
 
-
-function draw()
-{
-  for (let i = 0; i < blocks.length; i++)
-  {
+function draw() {
+  for (let i = 0; i < blocks.length; i++) {
     blocks[i].display(color(blocks[i].color));
+    blocks[i].toggleCircleAnimation(toggleCircle);
   }
   s = s + 0.1;
   pulse_var = cos(s)
-  if (current_rhythm_properties.n_rhythms == 0)
-  {
+  if (current_rhythm_properties.n_rhythms == 0) {
     clear();
   }
   // Draw here...
-  else
-  {
+  else {
     // ONE RHYTHM
-    if (current_rhythm_properties.n_rhythms == 1)
-    {
-      for (let i = 0; i < blocks.length; i++)
-      {
+    if (current_rhythm_properties.n_rhythms == 1) {
+      for (let i = 0; i < blocks.length; i++) {
         blocks[i].display(color(blocks[i].color));
       }
       // Check if the rhythm has been struck
-      if (current_rhythm_properties.rhythm_isStruck[0] == true)
-      {
+      if (current_rhythm_properties.rhythm_isStruck[0] == true) {
         // Set the flag back to false
         current_rhythm_properties.rhythm_isStruck[0] = false;
         console.log("RHYTHM 1/1 STRUCK");
@@ -398,29 +421,26 @@ function draw()
       // 
     }
     // TWO RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 2)
-    {
-      for (let i = 0; i < blocks.length; i++)
-      {
+    else if (current_rhythm_properties.n_rhythms == 2) {
+      for (let i = 0; i < blocks.length; i++) {
         blocks[i].display(color(blocks[i].color));
       }
       // If both rhythms have been struck at the same time ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true && current_rhythm_properties.rhythm_isStruck[1] == true)
-      {
+      let combination = combine(current_rhythm_properties.rhythm_isStruck, 2)
+      if (current_rhythm_properties.rhythm_isStruck[0] == true && current_rhythm_properties.rhythm_isStruck[1] == true) {
         console.log("RHYTHMS 1/2 AND 2/2 STRUCK")
         pulsation(pulse_var, 2)
+        toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
       }
       // If only the first rhythm has been struck ...
-      else if (current_rhythm_properties.rhythm_isStruck[0] == true)
-      {
+      else if (current_rhythm_properties.rhythm_isStruck[0] == true) {
         console.log("RHYTHM 1/2 STRUCK")
         current_rhythm_properties.rhythm_isStruck[0] = false;
         pulsation(pulse_var, 1);
         //fill_1 = getRandomColor(3);
       }
       // If only the second rhythm has been struck ...
-      else if (current_rhythm_properties.rhythm_isStruck[1] == true)
-      {
+      else if (current_rhythm_properties.rhythm_isStruck[1] == true) {
         console.log("RHYTHM 2/2 STRUCK")
         current_rhythm_properties.rhythm_isStruck[1] = false;
         pulsation(pulse_var, 1);
@@ -428,34 +448,49 @@ function draw()
       }
     }
     // THREE RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 3)
-    {
-      for (let i = 0; i < blocks.length; i++)
-      {
+    else if (current_rhythm_properties.n_rhythms == 3) {
+      for (let i = 0; i < blocks.length; i++) {
         blocks[i].display(color(blocks[i].color));
       }
-      pulsation(pulse_var, 1);
-
+     // If all rhythms have been struck at the same time ...
+     let combinations = combine([0, 1, 2], 2);
+     for (let combination of combinations) { 
+       //console.log("ok capo siamo dentro il for della combinations", combination )
+       if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] ==true) {
+         console.log("Missione riuscita! siamo dentro, passo e chiudo")
+         console.log("all three rythms have been STRUCK togheter")
+         pulsation(pulse_var, 2)
+         toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
+       } 
+     }
     }
     // FOUR RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 4)
-    {
-      for (let i = 0; i < blocks.length; i++)
-      {
+    else if (current_rhythm_properties.n_rhythms == 4) {
+      console.log("Sono dentro al caso dei 4 ritmi")
+      for (let i = 0; i < blocks.length; i++) {
         blocks[i].display(color(blocks[i].color));
       }
-      pulsation(pulse_var, 1);
+      pulsation(pulse_var, 2);
+      
+      // If all rhythms have been struck at the same time ...
+      let combinations = combine([0, 1, 2, 3], 2);
+      for (let combination of combinations) { 
+        //console.log("ok capo siamo dentro il for della combinations", combination )
+        if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] ==true) {
+          console.log("Missione riuscita! siamo dentro, passo e chiudo")
+          console.log("all three rythms have been STRUCK togheter")
+          pulsation(pulse_var, 2)
+          toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
+        } 
+      }
       current_rhythm_properties.reset_flags();
-    }
-    else
-    {
+      
+    } else {
       background(127, 127, 127);
       window.alert("Too many rhythms, can't display");
     }
   }
 }
-
-
 
 
 
@@ -471,14 +506,13 @@ btnPlay.addEventListener("click", play);
 const btnStop = document.querySelector("#btn-stop");
 btnStop.addEventListener("click", stop);
 
-function play()
-{
+function play() {
   mySound.start();
   Tone.Transport.start();
 }
 
-function stop()
-{
+function stop() {
   mySound.stop();
   Tone.Transport.stop();
+  toggleCircle= false;
 }
