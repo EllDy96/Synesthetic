@@ -257,8 +257,11 @@ var exceed_elem;
  ************************************************/
 
 // Load the audio file and the JSON file
-function preload() {
-  loadJSON('assets/inputRhythms.json', storeJSON);
+
+function preload()
+{
+  //loadJSON('assets/inputRhythms.json', storeJSON);
+  loadJSON('assets/inputRhythms_incremental.json', storeJSON)
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
 }
 
