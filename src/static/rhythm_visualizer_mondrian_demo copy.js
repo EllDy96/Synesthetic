@@ -16,24 +16,42 @@ function getRandomColor(brightness)
 function pulsation(pulse_var, num_rhythms)
 {
   var j = 0;
-  while (j < num_rhythms)
+  while (j < num_rhythms) //ad ogni ritmo associo un colore
   {
     for (i = 0; i < blocks.length; i++)
     {
       //primi due ritmi associati ai colori freddi, terzo e quarto associato a colori caldi;
       if (blocks[i].color == color_palette_merged[j])
       {
-        push()
+        //push()
         let color_pulse = color(blocks[i].color);
-        let c = lerpColor(c_pulse, color_pulse, pulse_var);
+        let c = lerpColor(c_pulse, color_pulse, pulse_var); //pulse var is just a parameter btw 0 : 1
         blocks[i].display(c);
-        pop()
+        //pop()
       }
     }
     j += 1;
   }
 }
 
+function color_assignment_per_rhythm(num_rhythms)
+{
+  var j = 0;
+  while (j < num_rhythms) //ad ogni ritmo associo un colore
+  {
+    for (i = 0; i < blocks.length; i++)
+    {
+      //primi due ritmi associati ai colori freddi, terzo e quarto associato a colori caldi;
+      if (blocks[i].color == color_palette_merged[j])
+      {
+        //push()
+        blocks[i].display(j);
+        //pop()
+      }
+    }
+    j += 1;
+  }
+}
 
 
 function fillOnRows(y, currHeight)
@@ -212,7 +230,7 @@ var color_pulse, n_colors;
 var curr_block;
 var stroke_dim;
 var exceed_elem;
-
+let flag_animation, flag_pulsation;
 
 
 
@@ -226,8 +244,7 @@ var exceed_elem;
 // Load the audio file and the JSON file
 function preload()
 {
-  //loadJSON('assets/inputRhythms.json', storeJSON);
-  loadJSON('assets/inputRhythms_incremental.json', storeJSON)
+  loadJSON('assets/inputRhythms.json', storeJSON);
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
 }
 function storeJSON(data)
@@ -354,6 +371,8 @@ function setup()
   c4 = color(155, 155, 155);
   pulse_var = 0;
   s = 0;
+  flag_animation = true;
+  flag_pulsation = false;
 }
 
 
@@ -364,8 +383,7 @@ function draw()
   {
     blocks[i].display(color(blocks[i].color));
   }
-  s = s + 0.1;
-  pulse_var = cos(s)
+  pulse_var = sin(s)*sin(s) //variable that is passed to lerpColor, defines the color variation aka pulsation
   if (current_rhythm_properties.n_rhythms == 0)
   {
     clear();
@@ -386,18 +404,23 @@ function draw()
         // Set the flag back to false
         current_rhythm_properties.rhythm_isStruck[0] = false;
         console.log("RHYTHM 1/1 STRUCK");
-
-        // Change the fill (random color or just inverse color)
-        //fill_1 = getRandomColor(3);
-        //fill_1 = 255-fill_1;
-        pulsation(pulse_var, 1)
-
+        //one shot pulsation
+        if(flag_pulsation == false && pulse_var > 0.5){
+          flag_pulsation = true;
+          flag_animation = true;
+        }else if(flag_pulsation == true && pulse_var < 0.1){
+          flag_animation = false;
+        }
+        if(flag_animation==true){
+          pulsation(pulse_var, 1, 1)
+          s = s + 0.5;
+        }
       }
-      //   // In every case, redraw the ellipse
-      //   fill(fill_1);
-      //   ellipse(width/2,height/2, diam, diam);
-      // 
+      //turn back to true the one-shot pulsation flags
+      flag_animation = true;
+      flag_pulsation = true;
     }
+
     // TWO RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 2)
     {
@@ -409,14 +432,27 @@ function draw()
       if (current_rhythm_properties.rhythm_isStruck[0] == true && current_rhythm_properties.rhythm_isStruck[1] == true)
       {
         console.log("RHYTHMS 1/2 AND 2/2 STRUCK")
-        pulsation(pulse_var, 2)
+        current_rhythm_properties.rhythm_isStruck[0] = false;
+        current_rhythm_properties.rhythm_isStruck[1] = false;
+        if(flag_pulsation == false && pulse_var > 0.5){
+          flag_pulsation = true;
+          flag_animation = true;
+        }else if(flag_pulsation == true && pulse_var < 0.1){
+          flag_animation = false;
+        }
+        if(flag_animation==true){
+          pulsation(pulse_var, 1, 1)
+          s = s + 0.5;
+        }
+     
+        pulsation(pulse_var, 2, 2)
       }
       // If only the first rhythm has been struck ...
       else if (current_rhythm_properties.rhythm_isStruck[0] == true)
       {
         console.log("RHYTHM 1/2 STRUCK")
         current_rhythm_properties.rhythm_isStruck[0] = false;
-        pulsation(pulse_var, 1);
+        pulsation(pulse_var, 2, 1);
         //fill_1 = getRandomColor(3);
       }
       // If only the second rhythm has been struck ...
@@ -435,7 +471,7 @@ function draw()
       {
         blocks[i].display(color(blocks[i].color));
       }
-      pulsation(pulse_var, 1);
+      pulsation(pulse_var, 3);
 
     }
     // FOUR RHYTHMS
@@ -445,7 +481,7 @@ function draw()
       {
         blocks[i].display(color(blocks[i].color));
       }
-      pulsation(pulse_var, 1);
+      pulsation(pulse_var, 4);
       current_rhythm_properties.reset_flags();
     }
     else
