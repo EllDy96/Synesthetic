@@ -120,17 +120,16 @@ function shuffle_array(array) //Fisher-Yates Shuffle algorhythm
 class rhythm_properties {
   constructor() {
     this.n_rhythms = 0;
-    // this.rhythm_isStruck =
-    //   [
-    //     false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-    //     false, false, false, false, // except in the instant when the corresponding rhythm is struck.
-    //     false, false, false, false,
-    //     false, false, false, false,
-    //   ];
     this.rhythm_isStruck = [
       false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-      // except in the instant when the corresponding rhythm is struck.
+      false, false, false, false, // except in the instant when the corresponding rhythm is struck.
+      false, false, false, false,
+      false, false, false, false,
     ];
+      // this.rhythm_isStruck = [
+      //   false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
+      //   // except in the instant when the corresponding rhythm is struck.
+      // ];
   }
 
   update(args) {
@@ -146,8 +145,10 @@ class rhythm_properties {
   reset_flags() {
     this.rhythm_isStruck = [
       false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-     // except in the instant when the corresponding rhythm is struck.
-    ];
+      false, false, false, false, // except in the instant when the corresponding rhythm is struck.
+      false, false, false, false,
+      false, false, false, false,
+    ]
   }
 
   print() {
@@ -258,8 +259,7 @@ var exceed_elem;
 
 // Load the audio file and the JSON file
 
-function preload()
-{
+function preload() {
   //loadJSON('assets/inputRhythms.json', storeJSON);
   loadJSON('assets/inputRhythms_incremental.json', storeJSON)
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
@@ -385,11 +385,12 @@ function setup() {
 
 /************************************************
  ************************************************
- ****************** DRAW ********************
+ ******************DRAW ********************
  ************************************************
  ************************************************/
 
 function draw() {
+  console.log("Numero di ritmi: ", current_rhythm_properties.n_rhythms)
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].display(color(blocks[i].color));
     blocks[i].toggleCircleAnimation(toggleCircle);
@@ -429,7 +430,7 @@ function draw() {
         blocks[i].display(color(blocks[i].color));
       }
       // If both rhythms have been struck at the same time ...
-      let combination = combine(current_rhythm_properties.rhythm_isStruck, 2)
+     
       if (current_rhythm_properties.rhythm_isStruck[0] == true && current_rhythm_properties.rhythm_isStruck[1] == true) {
         console.log("RHYTHMS 1/2 AND 2/2 STRUCK")
         pulsation(pulse_var, 2)
@@ -455,17 +456,16 @@ function draw() {
       for (let i = 0; i < blocks.length; i++) {
         blocks[i].display(color(blocks[i].color));
       }
-     // If all rhythms have been struck at the same time ...
-     let combinations = combine([0, 1, 2], 2);
-     for (let combination of combinations) { 
-       //console.log("ok capo siamo dentro il for della combinations", combination )
-       if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] ==true) {
-         console.log("Missione riuscita! siamo dentro, passo e chiudo")
-         console.log("all three rythms have been STRUCK togheter")
-         pulsation(pulse_var, 2)
-         toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
-       } 
-     }
+      // If 2 rhythms have been struck at the same time ...
+      let combinations = combine([0, 1, 2], 2);
+      for (let combination of combinations) {
+        //console.log("ok capo siamo dentro il for della combinations", combination )
+        if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] == true) {
+          console.log("2 rhythms out of three have been STRUCK togheter")
+          pulsation(pulse_var, 2)
+          toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
+        }
+      }
     }
     // FOUR RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 4) {
@@ -474,20 +474,20 @@ function draw() {
         blocks[i].display(color(blocks[i].color));
       }
       pulsation(pulse_var, 2);
-      
+
       // If all rhythms have been struck at the same time ...
       let combinations = combine([0, 1, 2, 3], 2);
-      for (let combination of combinations) { 
+      for (let combination of combinations) {
         //console.log("ok capo siamo dentro il for della combinations", combination )
-        if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] ==true) {
+        if (current_rhythm_properties.rhythm_isStruck[combination[0]] == true && current_rhythm_properties.rhythm_isStruck[combination[1]] == true) {
           console.log("Missione riuscita! siamo dentro, passo e chiudo")
           console.log("all three rythms have been STRUCK togheter")
           pulsation(pulse_var, 2)
           toggleCircle = !toggleCircle // toggle of the variable that control the squareToCircle animation
-        } 
+        }
       }
       current_rhythm_properties.reset_flags();
-      
+
     } else {
       background(127, 127, 127);
       window.alert("Too many rhythms, can't display");
@@ -517,5 +517,5 @@ function play() {
 function stop() {
   mySound.stop();
   Tone.Transport.stop();
-  toggleCircle= false;
+  toggleCircle = false;
 }
