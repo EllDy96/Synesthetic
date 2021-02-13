@@ -167,7 +167,8 @@ class MondrianBlocks {
   }
 
   // Assigns a color to every block of the composition
-  color_assignment() {
+  assign_colors_to_blocks()
+  {
     let tot_area = 0;
     for (let i = 0; i < this.blocks.length; i++) {
       tot_area += this.blocks[i].area;
@@ -185,7 +186,8 @@ class MondrianBlocks {
 
   // REASSIGN
   // REASSIGNS a color to every block of the composition
-  color_reassignment() {
+  reassign_colors_to_blocks()
+  {
     let tot_area = 0;
     for (let i = 0; i < this.blocks.length; i++) {
       tot_area += this.blocks[i].area;
@@ -201,11 +203,13 @@ class MondrianBlocks {
     }
   }
 
-  // Temporarily (!) updates the color of the blocks which have color==passed_color.
+  // Temporarily (!) shifts the color of the blocks which have color==passed_color.
   // The color of those blocks is shifted towards color color_pulse_to based on the factor color_shift_coefficient.
   // color_shift_coefficient is a parameter in range [0,1]
-  update_color(passed_color, color_shift_coefficient) {
-    for (let i = 0; i < this.blocks.length; i++) {
+  shift_color(passed_color, color_shift_coefficient)
+  {
+    for (let i = 0; i < this.blocks.length; i++)
+    {
       //console.log("comparing ", this.blocks[i].color, " with ", passed_color)
       if (this.blocks[i].color == passed_color) {
         //push()
@@ -371,9 +375,10 @@ function setup() {
 
   // INITIALIZE THE CANVAS
   createCanvas(windowHeight, windowHeight);
+  background(255)
   mondrian_blocks = new MondrianBlocks(10, height, width, sizes, color_palette_warm, color_palette_cold);
   mondrian_blocks.generate_mondrian(); // generate the blocks
-  mondrian_blocks.color_assignment(); // assign a color to every block
+  mondrian_blocks.assign_colors_to_blocks(); // assign a color to every block
   mondrian_blocks.draw_mondrian(); // draw the blocks
 
 
@@ -469,7 +474,7 @@ function draw() {
         }
         if (flag_animation == true) {
           console.log("changing color ", color_palette_warm[0]);
-          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
+          mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
           s = s + 0.3;
         } else {
           flag_animation = true;
@@ -495,9 +500,11 @@ function draw() {
         }
         if (flag_animation == true) {
           console.log("changing color ", color_palette_warm[0]);
-          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.4;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
           flag_animation = true;
           flag_pulsation = false;
           s = 0;
@@ -516,9 +523,11 @@ function draw() {
         }
         if (flag_animation1 == true) {
           console.log("changing color ", color_palette_warm[1]);
-          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
           flag_animation1 = true;
           flag_pulsation1 = false;
           s1 = 0;
@@ -545,9 +554,11 @@ function draw() {
         }
         if (flag_animation == true) {
           console.log("changing color ", color_palette_warm[0]);
-          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
           flag_animation = true;
           flag_pulsation = false;
           s = 0;
@@ -566,9 +577,11 @@ function draw() {
         }
         if (flag_animation1 == true) {
           console.log("changing color ", color_palette_warm[1]);
-          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
           flag_animation1 = true;
           flag_pulsation1 = false;
           s1 = 0;
@@ -587,9 +600,11 @@ function draw() {
         }
         if (flag_animation2 == true) {
           console.log("changing color ", color_palette_cold[0]);
-          mondrian_blocks.update_color(color_palette_cold[0], color_shift_coefficient2);
-          s2 = s2 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
+          s2 = s2 + 0.5;
+        }
+        else
+        {
           flag_animation2 = true;
           flag_pulsation2 = false;
           s2 = 0;
@@ -611,9 +626,11 @@ function draw() {
         }
         if (flag_animation == true) {
           console.log("changing color ", color_palette_warm[0]);
-          mondrian_blocks.update_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
+          s = s + 0.5;
+        }
+        else
+        {
           flag_animation = true;
           flag_pulsation = false;
           s = 0;
@@ -632,9 +649,11 @@ function draw() {
         }
         if (flag_animation1 == true) {
           console.log("changing color ", color_palette_warm[1]);
-          mondrian_blocks.update_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
+          s1 = s1 + 0.5;
+        }
+        else
+        {
           flag_animation1 = true;
           flag_pulsation1 = false;
           s1 = 0;
@@ -653,9 +672,11 @@ function draw() {
         }
         if (flag_animation2 == true) {
           console.log("changing color ", color_palette_cold[0]);
-          mondrian_blocks.update_color(color_palette_cold[0], color_shift_coefficient2);
-          s2 = s2 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
+          s2 = s2 + 0.5;
+        }
+        else
+        {
           flag_animation2 = true;
           flag_pulsation2 = false;
           s2 = 0;
@@ -674,9 +695,11 @@ function draw() {
         }
         if (flag_animation3 == true) {
           console.log("changing color ", color_palette_cold[1]);
-          mondrian_blocks.update_color(color_palette_cold[1], color_shift_coefficient3);
-          s3 = s3 + 0.45;
-        } else {
+          mondrian_blocks.shift_color(color_palette_cold[1], color_shift_coefficient3);
+          s3 = s3 + 0.5;
+        }
+        else
+        {
           flag_animation3 = true;
           flag_pulsation3 = false;
           s3 = 0;
