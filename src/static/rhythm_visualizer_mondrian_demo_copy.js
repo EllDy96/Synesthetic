@@ -314,6 +314,7 @@ let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
 let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
+let pulse_speed = 0.1;
 
 const color_pulse_to = "#ffffff"; // Target color of the pulse animation
 const color_palette_warm =
@@ -372,7 +373,7 @@ let flag_pulsation3 = false;
 // Load the audio file and the JSON file
 function preload()
 {
-  loadJSON('assets/inputRhythms_incremental.json', storeJSON);
+  loadJSON('assets/inputRhythms.json', storeJSON);
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
 }
 function storeJSON(data)
@@ -496,7 +497,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[0]);
           mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.3;
+          s = s + pulse_speed;
         }
         else
         {
@@ -530,7 +531,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[0]);
           mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.5;
+          s = s + pulse_speed;
         }
         else
         {
@@ -558,7 +559,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[1]);
           mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.5;
+          s1 = s1 + pulse_speed;
         }
         else
         {
@@ -591,7 +592,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[0]);
           mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.5;
+          s = s + pulse_speed;
         }
         else
         {
@@ -619,7 +620,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[1]);
           mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.5;
+          s1 = s1 + pulse_speed;
         }
         else
         {
@@ -647,7 +648,7 @@ function draw()
         {
           console.log("changing color ", color_palette_cold[0]);
           mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
-          s2 = s2 + 0.5;
+          s2 = s2 + pulse_speed;
         }
         else
         {
@@ -681,7 +682,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[0]);
           mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient);
-          s = s + 0.5;
+          s = s + pulse_speed;
         }
         else
         {
@@ -709,7 +710,7 @@ function draw()
         {
           console.log("changing color ", color_palette_warm[1]);
           mondrian_blocks.shift_color(color_palette_warm[1], color_shift_coefficient1);
-          s1 = s1 + 0.5;
+          s1 = s1 + pulse_speed;
         }
         else
         {
@@ -737,7 +738,7 @@ function draw()
         {
           console.log("changing color ", color_palette_cold[0]);
           mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
-          s2 = s2 + 0.5;
+          s2 = s2 + pulse_speed;
         }
         else
         {
@@ -765,7 +766,7 @@ function draw()
         {
           console.log("changing color ", color_palette_cold[1]);
           mondrian_blocks.shift_color(color_palette_cold[1], color_shift_coefficient3);
-          s3 = s3 + 0.5;
+          s3 = s3 + pulse_speed;
         }
         else
         {
