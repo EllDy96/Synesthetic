@@ -429,6 +429,9 @@ let x_jit, y_jit;
 let flag_jitter;
 let dim1_shift, dim2_shift, x_center, y_center;
 let x_tlc, y_tlc;
+let switch_pulse = false;
+let switch_pulse_1 = false;
+let pulse_speed_d = 0.05
 
 const color_pulse_to = "#ffffff"; // Target color of the pulse animation
 const color_palette_warm =
@@ -509,7 +512,6 @@ function setup()
   mondrian_blocks.generate_mondrian_from_center(); // generate the blocks
   mondrian_blocks.assign_colors_to_blocks(); // assign a color to every block
   mondrian_blocks.draw_mondrian(); // draw the blocks
-  
 
   // SCHEDULE THE Tone.Transport CALLS
   // For each window...
@@ -780,10 +782,10 @@ function draw()
     else if (current_rhythm_properties.n_rhythms == 4)
     {
       // If only the first rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true)
+      if (current_rhythm_properties.rhythm_isStruck[0] == true && switch_pulse == false)
       {
         console.log("RHYTHM 1/4 STRUCK")
-        if(flag_pulsation == false && color_shift_coefficient> 0.5)
+        if(flag_pulsation == false && color_shift_coefficient > 0.99) // this way color shift_coefficient goes from 0 to 1
         {
           flag_pulsation = true;
           flag_animation = true;
@@ -801,13 +803,45 @@ function draw()
           //mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient); // pulsation response
           mondrian_blocks.jitter_shift_color_combo(color_palette_warm[0], jitter_value_x, jitter_value_y, color_shift_coefficient) //pulsation + jitter response
 
-          s = s + pulse_speed;
+          s = s + pulse_speed_d;
         }
         else
         {
           flag_animation = true;
           flag_pulsation = false;
-          s = 0;
+          switch_pulse = true;
+          //s = 0 -- now i have color_shift _coefficient ~= 1
+          jitter_value_x = 0;
+          jitter_value_y = 0;
+        }
+      }else if(current_rhythm_properties.rhythm_isStruck[0] == true && switch_pulse == true)
+      {
+        if(flag_pulsation == false && color_shift_coefficient < 0.01) // this way color shift_coefficient goes from 1 to 0
+        {
+          flag_pulsation = true;
+          flag_animation = true;
+        }
+        else if(flag_pulsation == true) // && color_shift_coefficient< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation = false;
+          current_rhythm_properties.rhythm_isStruck[0] = false;
+        }
+        if(flag_animation==true)
+        {
+          //mondrian_blocks.jitter_mondrian(color_palette_warm[0], jitter_value_x, jitter_value_y); // jitter response
+          console.log("changing color ", color_palette_warm[0]);
+          //mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient); // pulsation response
+          mondrian_blocks.jitter_shift_color_combo(color_palette_warm[0], jitter_value_x, jitter_value_y, color_shift_coefficient) //pulsation + jitter response
+
+          s = s + pulse_speed_d;
+        }
+        else
+        {
+          switch_pulse = false;
+          flag_animation = true;
+          flag_pulsation = false;
+          //s = 0 
           jitter_value_x = 0;
           jitter_value_y = 0;
         }
@@ -847,15 +881,15 @@ function draw()
         }
       }
       // If only the third rhythm has been struck...
-      if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      if (current_rhythm_properties.rhythm_isStruck[2] == true && switch_pulse_1 == false)
       {
         console.log("RHYTHM 3/4 STRUCK")
-        if(flag_pulsation2 == false && color_shift_coefficient2> 0.5)
+        if(flag_pulsation2 == false && color_shift_coefficient2 > 0.99) // this way color shift_coefficient goes from 0 to 1
         {
           flag_pulsation2 = true;
           flag_animation2 = true;
         }
-        else if(flag_pulsation2 == true && color_shift_coefficient2< 0.1)
+        else if(flag_pulsation2 == true) // && color_shift_coefficient< 0.1)
         {
           console.log("terminating animation")
           flag_animation2 = false;
@@ -863,20 +897,81 @@ function draw()
         }
         if(flag_animation2==true)
         {
+          //mondrian_blocks.jitter_mondrian(color_palette_warm[0], jitter_value_x, jitter_value_y); // jitter response
           console.log("changing color ", color_palette_cold[0]);
-          mondrian_blocks.shift_dimension(color_palette_cold[0], color_shift_coefficient2);
-         // mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
-          
-          s2 = s2 + pulse_speed;
+          //mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient); // pulsation response
+          mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2) //pulsation + jitter response
+
+          s2 = s2 + pulse_speed_d;
         }
         else
         {
-         
           flag_animation2 = true;
           flag_pulsation2 = false;
-          s2 = 0;
+          switch_pulse_1 = true;
+          //s = 0 -- now i have color_shift _coefficient ~= 1
+        }
+      }else if(current_rhythm_properties.rhythm_isStruck[2] == true && switch_pulse_1 == true)
+      {
+        if(flag_pulsation2 == false && color_shift_coefficient2 < 0.01) // this way color shift_coefficient goes from 1 to 0
+        {
+          flag_pulsation2 = true;
+          flag_animation2 = true;
+        }
+        else if(flag_pulsation2 == true) // && color_shift_coefficient< 0.1)
+        {
+          console.log("terminating animation")
+          flag_animation2 = false;
+          current_rhythm_properties.rhythm_isStruck[2] = false;
+        }
+        if(flag_animation2==true)
+        {
+          //mondrian_blocks.jitter_mondrian(color_palette_warm[0], jitter_value_x, jitter_value_y); // jitter response
+          console.log("changing color ", color_palette_cold[0]);
+          //mondrian_blocks.shift_color(color_palette_warm[0], color_shift_coefficient); // pulsation response
+          mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2) //pulsation + jitter response
+
+          s2 = s2 + pulse_speed_d;
+        }
+        else
+        {
+          switch_pulse_1 = false;
+          flag_animation2 = true;
+          flag_pulsation2 = false;
+          //s = 0 
         }
       }
+      // if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      // {
+      //   console.log("RHYTHM 3/4 STRUCK")
+      //   if(flag_pulsation2 == false && color_shift_coefficient2> 0.5)
+      //   {
+      //     flag_pulsation2 = true;
+      //     flag_animation2 = true;
+      //   }
+      //   else if(flag_pulsation2 == true && color_shift_coefficient2< 0.1)
+      //   {
+      //     console.log("terminating animation")
+      //     flag_animation2 = false;
+      //     current_rhythm_properties.rhythm_isStruck[2] = false;
+      //   }
+      //   if(flag_animation2==true)
+      //   {
+      //     console.log("changing color ", color_palette_cold[0]);
+      //     mondrian_blocks.shift_dimension(color_palette_cold[0], color_shift_coefficient2);
+      //    // mondrian_blocks.shift_color(color_palette_cold[0], color_shift_coefficient2);
+          
+      //     s2 = s2 + pulse_speed;
+      //   }
+      //   else
+      //   {
+         
+      //     flag_animation2 = true;
+      //     flag_pulsation2 = false;
+      //     s2 = 0;
+      //   }
+      // }
+
       // If only the fourth rhythm has been struck...
       if (current_rhythm_properties.rhythm_isStruck[3] == true)
       {
