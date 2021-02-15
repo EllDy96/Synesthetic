@@ -7,7 +7,7 @@ The aim of the project is to render a visual representation of a musical piece v
 2. A one-channel track containing the most harmonic content of the musical piece (e.g. chords)
 3. A two-channel mixdown of the first two audio tracks.    
 
-Based on the rhythmic and harmonic track, a dynamic visual representation is generated. The third track is played back during the visualization.
+Based on the rhythmic track, a dynamic visual representation is generated. The third track is played back during the visualization.
 
 ## Detailed project description
 
@@ -21,7 +21,6 @@ Python and Javascript are integrated using Flask (see https://flask.palletsproje
 ### Backend (Python)
 Pre-analysis/extration of information from the audio track:
 * Rhythm: a custom algorithm is used in order to extract all the periodicities inside the rhythm track. Polyrhythms are supported.
-* Harmony
 
 All information is extracted in the backend in order to optimize the realtime aspect of the visualization in javascript.
 The extracted information is passed to the frontend as JSON objects that are interpreted simultaneously with the playback of the musical piece.
@@ -30,4 +29,4 @@ The extracted information is passed to the frontend as JSON objects that are int
 ### Frontend (Javascript)
 We visualize in a different way:
 * Rhythms: since polyrhythms are supported, each rhythm can be associated to a different geometric figure. The figures appear and pulsate following their relative rhythm
-* Harmony: associated to the colors of the background and of other elements.
+
