@@ -34,6 +34,7 @@ function shuffle_array(array) //Fisher-Yates Shuffle algorhythm
   return array;
 }
 
+// Play and stop controls
 function handle_keypress_controller()
 {
   if(keyIsPressed == true && key == 'p' && mySound.state=="stopped")
@@ -46,6 +47,7 @@ function handle_keypress_controller()
   }
 }
 
+// Drumkit sounds controls
 function handle_keypress_drumkit()
 {
   if(keyIsPressed == true && key == 'a' && kick.state=="stopped")
@@ -69,6 +71,7 @@ function handle_keypress_drumkit()
     oh.start();
   }
 }
+
 
 function first_rhythm_pulsate(console_message)
 {
@@ -320,8 +323,6 @@ function fourth_rhythm_pulsate(console_message)
     //jitter_value_y = 0;
   }
 }
-
-
 
 
 
