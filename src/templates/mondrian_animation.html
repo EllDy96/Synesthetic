@@ -7,10 +7,12 @@
 
   <title>Tempos Visualizer</title>
 
-  <link rel="stylesheet" type="text/css" href="rhythm_visualizer.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/rhythm_visualizer.css')  }}">
   
-  <script src="../static/libraries/Tone.js"></script>
-  <script src="../static/libraries/p5.min.js"></script>
+  <script src="{{ url_for('static', filename='libraries/p5.min.js')  }}"></script>
+  <script src="{{ url_for('static', filename='libraries/Tone.js')  }}"></script>
+
+
   
 </head>
 
@@ -22,7 +24,8 @@
     <button id="btn-play" class="btn">Play</button>
     <button id="btn-stop" class="btn">Stop</button>
   </div>
-  <script src="../static/rhythm_visualizer_mondrian_demo_V4_3.js"></script>
+  <script src="{{ url_for('static', filename='mondrian_synesthetic.js')  }}"></script>
+
 </body>
 
 </html>

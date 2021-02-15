@@ -9,7 +9,7 @@ template_dir = os.path.relpath('./templates') #reference template, in case you w
 app= Flask(__name__, template_folder=template_dir)
 app.config['MAX_CONTENT_LENGTH']=20*1024*1024 #fix the max size of the uploaded files at 20MB
 app.config['UPLOAD_EXTENSIONS']=['.mp3', '.wav', '.flac']
-app.config['UPLOAD_PATH']='templates/assets/'
+app.config['UPLOAD_PATH']='static/assets' #where to save the rhythmic track
 
 @app.route('/')         #collegamento tra ('percorso url') e ...                        
 def upload():           #... funzione view
@@ -26,8 +26,7 @@ def upload_file():
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
 
    track_path = os.path.join(app.config['UPLOAD_PATH'], filename)
-
-   td.driver_function(track_path, 'templates/assets/jsonTest.json')
+   td.driver_function(track_path, 'static/assets/jsonTest.json')
 
    return render_template('mondrian_animation.html')
 
@@ -35,7 +34,4 @@ def upload_file():
 def send_track(filename):
    return send_from_directory("uploaded_tracks", filename)
 
-@app.route('/metronome')
-def canvas():
-   return render_template ('metronome.html')   
 
