@@ -1,8 +1,77 @@
+<!DOCTYPE html>
 <html>
-   <body>
-      <form  method = "POST" action="" enctype = "multipart/form-data">
-         <input type = "file" name = "file"/>
-         <input type = "submit" value="Submit"/>
+
+<head>
+   <title>Synesthetic</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> 
+
+   <style>
+      * {
+         box-sizing: border-box;
+      }
+
+      body {
+         margin: 0;
+         font-family: 'Lobster';
+      }
+
+      #myVideo {
+         filter: blur(10px) brightness(0.8);
+         position: fixed;
+         right: 0;
+         bottom: 0;
+         min-width: 100%;
+         min-height: 100%;
+      }
+
+      .content {
+         position: fixed;
+         top: 20;
+         color: #f1f1f1;
+         width: 100%;
+         padding: 20px;
+      }
+
+      h1
+      {
+         padding-top: 1.5em;
+         text-align: center;
+         font-size: 7em;
+         -webkit-text-stroke-width: 2px;
+         -webkit-text-stroke-color: black;
+      }
+
+      form
+      {
+         text-align: center;
+         padding-top: 1em;
+      }
+   </style>
+</head>
+
+<body>
+
+   <video autoplay muted loop id="myVideo">
+      <source src="assets/mondrian_demo.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+   </video>
+
+   <div class="content">
+      <h1>Welcome to Synesthetic</h1>         
+   
+      <form method="POST" action="" enctype="multipart/form-data">
+                  <input type="file" name="file" />
+                  <input type="submit" value="Submit"/>
       </form>
-   </body>
+   </div>
+   
+
+   <script>
+   </script>
+
+</body>
+
 </html>
