@@ -1,5 +1,5 @@
 import os
-from python_modules import tempo_detection as td
+#from python_modules import tempo_detection as td
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -8,6 +8,7 @@ app= Flask(__name__, template_folder=template_dir)
 app.config['MAX_CONTENT_LENGTH']=20*1024*1024 #fix the max size of the uploaded files at 20MB
 app.config['UPLOAD_EXTENSIONS']=['.mp3', '.wav', '.flac']
 app.config['UPLOAD_PATH']='static/assets/' #where to save the rhythmic track
+app.config["CACHE_TYPE"] = "null"
 
 @app.route('/')         #collegamento tra ('percorso url') e ...                        
 def upload():           #... funzione view
@@ -24,7 +25,7 @@ def upload_file():
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
 
    track_path = os.path.join(app.config['UPLOAD_PATH'], filename)
-   td.driver_function(track_path, 'static/assets/rhythm_file.json')
+   #td.driver_function(track_path, 'static/assets/rhythm_file.json')
 
    return render_template('mondrian_animation.html')
 
