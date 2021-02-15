@@ -491,8 +491,8 @@ let flag_pulsation3 = false;
 // Load the audio file and the JSON file
 function preload()
 {
-  loadJSON('static/assets/inputRhythms.json', storeJSON);
-  mySound = new Tone.Player("static/assets/muzak_drums.wav").toDestination();
+  loadJSON('static/assets/jsonTest.json', storeJSON);
+  mySound = new Tone.Player("static/assets/muzak_drums_old.wav").toDestination();
   //upload drum sounds
   kick = new Tone.Player("static/assets/Synesthetic_drums/kick_DM.wav").toDestination();
   snare = new Tone.Player('static/assets/Synesthetic_drums/snare.wav').toDestination();
@@ -518,7 +518,7 @@ function setup()
   mondrian_blocks.generate_mondrian_from_center(); // generate the blocks
   mondrian_blocks.assign_colors_to_blocks(); // assign a color to every block
   mondrian_blocks.draw_mondrian(); // draw the blocks
-
+  console.log("nel setup")
 
 
   // SCHEDULE THE Tone.Transport CALLS
