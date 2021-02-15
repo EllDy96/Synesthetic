@@ -277,6 +277,6 @@ def driver_function(audio_filename, json_filename, window_len_seconds=10, verbos
 ######## EXAMPLE USAGE ########
 ###############################
 
-driver_function("templates/assets/muzak_drums.wav", # Path to audio file
-                "templates/assets/inputRhythms.json" # Path to JSON where the rhythm analysis is stored
-                )
+#driver_function("templates/assets/muzak_drums.wav", # Path to audio file
+#                "templates/assets/inputRhythms.json" # Path to JSON where the rhythm analysis is stored
+#                )
