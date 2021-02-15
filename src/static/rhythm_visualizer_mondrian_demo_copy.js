@@ -211,7 +211,7 @@ class MondrianBlocks
     {
       //console.log("comparing ", this.blocks[i].color, " with ", passed_color)
       if (this.blocks[i].color == passed_color)
-      {        
+      {
         //push()
         let color_pulse_from = color(this.blocks[i].color);
         let next_color = lerpColor(color_pulse_from, color(color_pulse_to), color_shift_coefficient);
@@ -224,6 +224,7 @@ class MondrianBlocks
       }*/
     }
   }
+}
 
 
   draw_mondrian()
@@ -314,7 +315,7 @@ let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
 let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
-let pulse_speed = 0.1;
+let pulse_speed = 0.5;
 
 const color_pulse_to = "#ffffff"; // Target color of the pulse animation
 const color_palette_warm =

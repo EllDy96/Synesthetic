@@ -593,19 +593,7 @@ function draw()
 
   if (current_rhythm_properties.n_rhythms == 0)
   {
-    if(keyIsPressed == true && key == 'a'){
-      kick.start();  
-      kick.stop();   
-    }
-    if(keyIsPressed == true && key == 's'){
-      snare.start();
-    }
-    if(keyIsPressed == true && key == 'd'){
-      hihat.start();
-    }
-    if(keyIsPressed == true && key == 'w'){
-      oh.start();
-    }
+    //clear();
   }
   // Draw here...
   else
@@ -801,6 +789,28 @@ function draw()
     // FOUR RHYTHMS
     else if (current_rhythm_properties.n_rhythms == 4)
     {
+      
+      if(keyIsPressed == true && key == 'a' && kick.state=="stopped")
+      {
+        current_rhythm_properties.rhythm_isStruck[0] = true;
+        kick.start();
+      }
+      if(keyIsPressed == true && key == 's' && snare.state=="stopped")
+      {
+        current_rhythm_properties.rhythm_isStruck[1] = true;
+        snare.start();
+      }
+      if(keyIsPressed == true && key == 'd' && hihat.state=="stopped")
+      {
+        current_rhythm_properties.rhythm_isStruck[2] = true;
+        hihat.start();
+      }
+      if(keyIsPressed == true && key == 'w' && oh.state=="stopped")
+      {
+        current_rhythm_properties.rhythm_isStruck[3] = true;
+        oh.start();
+      }
+
       // If only the first rhythm has been struck ...
       if (current_rhythm_properties.rhythm_isStruck[0] == true && switch_pulse == false)
       {
