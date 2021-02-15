@@ -491,8 +491,8 @@ let flag_pulsation3 = false;
 // Load the audio file and the JSON file
 function preload()
 {
-  loadJSON('static/assets/jsonTest.json', storeJSON);
-  mySound = new Tone.Player("static/assets/muzak_drums_old.wav").toDestination();
+  loadJSON('static/assets/rhythm_file.json', storeJSON);
+  mySound = new Tone.Player("static/assets/muzak_drums.wav").toDestination();
   //upload drum sounds
   kick = new Tone.Player("static/assets/Synesthetic_drums/kick_DM.wav").toDestination();
   snare = new Tone.Player('static/assets/Synesthetic_drums/snare.wav').toDestination();
@@ -590,6 +590,11 @@ function draw()
   color_shift_coefficient3 = sin(s3)*sin(s3)
   jitter_value_x = random(-jitter_speed, jitter_speed)
   jitter_value_y = random(-jitter_speed, jitter_speed)
+
+  if(keyIsPressed == true && key == 'p' && mySound.state=="stopped")
+  {
+    play();
+  }
 
   if (current_rhythm_properties.n_rhythms == 0)
   {

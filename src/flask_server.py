@@ -24,7 +24,7 @@ def upload_file():
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
 
    track_path = os.path.join(app.config['UPLOAD_PATH'], filename)
-   td.driver_function(track_path, 'static/assets/jsonTest.json')
+   td.driver_function(track_path, 'static/assets/rhythm_file.json')
 
    return render_template('mondrian_animation.html')
 
