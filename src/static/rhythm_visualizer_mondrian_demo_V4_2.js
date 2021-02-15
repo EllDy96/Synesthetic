@@ -113,10 +113,10 @@ class Block {
     this.dim2 = dim_2;
     this.color = color;
     this.area = (this.dim1 * this.dim2);
-    this.ellipseWidth = 0;
-    this.ellipseHeight = 0
+    this.animatedRectWidth = 0;
+    this.animatedRectHeight = 0
     this.transparencyRange = 0;
-    this.blendedColor
+    this.blendedColor = '#ffffff';
 
   }
   display(_color) //specific for pulsation of color
@@ -143,23 +143,21 @@ class Block {
   circleFill() {
     if (circleFillOn) {
       noStroke();
-      let colorToBlend = color('#2f984f') // test color= a shape of  dark green
-      let color_from = color(this.color);
-      let color_shift_coefficient = 0.6;
-      this.blendedColor = lerpColor(color_from, colorToBlend, color_shift_coefficient);
-      this.blendedColor.setAlpha(225 - 225 * this.transparencyRange);
-      fill(this.blendedColor);
-      ellipse(this.x, this.y, this.ellipseWidth, this.ellipseHeight);
+
+      //this.blendedColor = lerpColor(this.color, color("#2f984f"), color_blend_coefficient);
+      let colorShape = color("#2f984f").setAlpha(255 - 225 * this.transparencyRange);
+      fill(colorShape);
+      rect(this.x, this.y, this.animatedRectWidth, this.animatedRectHeight);
 
       if (this.transparencyRange < 1) {
         this.transparencyRange += 0.01;
 
-        if (this.ellipseHeight < this.dim1) {
-          this.ellipseHeight += 2;
+        if (this.animatedRectHeight < this.dim1) {
+          this.animatedRectHeight += 2;
         }
 
-        if (this.ellipseWidth < this.dim2) {
-          this.ellipseWidth += 2;
+        if (this.animatedRectWidth < this.dim2) {
+          this.animatedRectWidthd += 2;
         }
 
       } else {
@@ -278,7 +276,6 @@ class MondrianBlocks {
   draw_mondrian() {
     for (let i in this.blocks) {
       this.blocks[i].display(this.blocks[i].color);
-
     }
   }
 
@@ -402,6 +399,8 @@ let flag_jitter;
 let dim1_shift, dim2_shift, x_center, y_center;
 let x_tlc, y_tlc;
 let circleFillOn = false;
+let colorToBlend = "#2f984f" // test color= a shape of  dark green
+let color_blend_coefficient = 0.6;
 const color_pulse_to = "#eeeeee" //"#ffffff"; // Target color of the pulse animation
 const color_palette_warm = [
   "#d24632", //rosso
@@ -481,10 +480,12 @@ function storeJSON(data) {
   n_windows = rhythmic_content.n_windows;
 }
 
+
 // Initialize the canvas and schedule the addCue calls upon the audio file
 function setup() {
   // SET THE TARGET FPS
   frameRate(60);
+  mySound.sync().start(0);
   // INITIALIZE THE CANVAS
   createCanvas(windowHeight, windowHeight);
   background(255)
@@ -493,6 +494,7 @@ function setup() {
   mondrian_blocks.generate_mondrian_from_center(); // generate the blocks
   mondrian_blocks.assign_colors_to_blocks(); // assign a color to every block
   mondrian_blocks.draw_mondrian(); // draw the blocks
+ 
 
 
   // SCHEDULE THE Tone.Transport CALLS
@@ -916,10 +918,6 @@ function draw() {
   }
 }
 
-
-
-
-
 /************************************************************************************************
  *************************************                *******************************************
  *************************************   CONTROLLER   *******************************************
@@ -932,12 +930,24 @@ btnPlay.addEventListener("click", play);
 const btnStop = document.querySelector("#btn-stop");
 btnStop.addEventListener("click", stop);
 
-function play() {
-  mySound.start();
+const btnPause = document.querySelector("#btn-pause");
+btnStop.addEventListener("click", pause);
+
+function pause() {
+  if (mySound.state == "started") {
+    Tone.Transport.pause();
+  } else if (mySound.state == "stopped") {
+    Tone.Transport.start();
+  }
+  // mySound.play()
+  // Tone.Transport.play()
+}
+function start(){
   Tone.Transport.start();
+  mySound.start();
 }
 
-function stop() {
-  mySound.stop();
-  Tone.Transport.stop();
-}
+// function stop() {
+//   // mySound.stop();
+//   Tone.Transport.stop();
+// }

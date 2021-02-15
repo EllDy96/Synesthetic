@@ -120,6 +120,7 @@ class Block {
     this.speed = 0.03;
     this.circleDiameter=0;
     this.transparencyRange=0;
+    this.blendedColor;
   }
   //functionalities
   display(color_pass) {
@@ -154,21 +155,33 @@ class Block {
     }
   }
   circleFill() {
-    if(this.dim1==this.dim2){ // this animation is only for squares
+    if (circleFillOn) {
       noStroke();
-      let colorToBlend= color('#2f984f')// test color= a shape of  dark green
-      let color_from = color(this.color);
-      let color_shift_coefficient= 0.6;
-      let blendedColor = lerpColor(color_from, colorToBlend, color_shift_coefficient);
-      blendedColor.setAlpha(225 - 210 * trasparancyRange);
-      fill(blendedColor,10);
-      circle(this.dim1/2,this.dim2/2, this.circleRadius);
-      if(this.circleRadius<200)
-        s = s + 2;
-      if(trasparancyRange<1.2)
-        trasparancyRange+=0.01
+      
+      this.blendedColor = lerpColor(this.color, colorToBlend, color_blend_coefficient);
+      this.blendedColor.setAlpha(225 - 225 * this.transparencyRange);
+      fill(this.blendedColor);
+      ellipse(this.x, this.y, this.ellipseWidth, this.ellipseHeight);
+
+      if (this.transparencyRange < 1) {
+        this.transparencyRange += 0.01;
+
+        if (this.ellipseHeight < this.dim1) {
+          this.ellipseHeight += 2;
+        }
+
+        if (this.ellipseWidth < this.dim2) {
+          this.ellipseWidth += 2;
+        }
+
+      } else {
+        circleFillOn = !circleFillOn //end of the animation
+        this.transparencyRange = 0;
+        this.ellipseHeight = 0;
+        this.ellipseWidth = 0;
+      }
     }
-    
+
   }
 }
 
@@ -366,7 +379,8 @@ let flag_pulsation3 = false;
 
 // Variable for toggling the circle animation when two rythms have been strucked at the same time 
 var toggleCircle = false;
-
+let colorToBlend = color('#2f984f') // test color= a shape of  dark green
+let color_blend_coefficient = 0.6;
 
 
 

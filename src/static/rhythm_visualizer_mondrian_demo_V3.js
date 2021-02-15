@@ -426,6 +426,7 @@ function preload()
 {
   loadJSON('assets/inputRhythms.json', storeJSON);
   mySound = new Tone.Player("assets/muzak_drums.wav").toDestination();
+  mySound.sync().start(0);
 }
 function storeJSON(data)
 {
@@ -872,12 +873,12 @@ btnStop.addEventListener("click", stop);
 
 function play()
 {
-  mySound.start();
+  //mySound.start();
   Tone.Transport.start();
 }
 
 function stop()
 {
-  mySound.stop();
-  Tone.Transport.stop();
+  //mySound.stop();
+  Tone.Transport.pause();
 }
