@@ -27,3 +27,5 @@ The extracted information is passed to the frontend as JSON objects that are int
 We visualize in a different way:
 * Rhythms: since polyrhythms are supported, each rhythm can be associated to a different animation. The animations are triggered and pulsate following their relative rhythm
 
+## How to run Synesthetic
+Navigate into the src/ folder and follow the instructions in the README file.
