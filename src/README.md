@@ -15,7 +15,11 @@ The expected output is:
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
  ```
  
-If the server complains about missing Python dependencies, Synesthetic won't be able to start. Please install them with the ```pip3 dependency_name``` command in order to proceed. Once the server is started, open up your browser and navigate to the IP address written in the terminal.
+If the server complains about missing Python dependencies, Synesthetic won't be able to start. Please install them with the 
+```bash
+pip3 dependency_name
+```
+command in order to proceed. Once the server is started, open up your browser and navigate to the IP address written in the terminal.
 
 ## How do the backend and fronted interact?
 
