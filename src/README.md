@@ -104,7 +104,7 @@ In order to give you an idea of what would it be like, we created a demo impleme
 You can make animations of your own. You can trigger all kinds of events on the p5 canvas in response to the current number of tempos in the musical piece. To do that, you'll have to write you own functions that are called each time a tempo is struck.
 
 ## I want to know more about Flask and p5!
-Thean free to explore these examples and tutorials:
+Then feel free to explore these examples and tutorials:
 * file uploads with Flask  
 link: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
