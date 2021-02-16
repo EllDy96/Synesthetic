@@ -52,22 +52,22 @@ function handle_keypress_drumkit()
 {
   if(keyIsPressed == true && key == 'a' && kick.state=="stopped")
   {
-    current_rhythm_properties.rhythm_isStruck[0] = true;
+    current_rhythmic_properties.tempo_isStruck[0] = true;
     kick.start();
   }
   if(keyIsPressed == true && key == 's' && snare.state=="stopped")
   {
-    current_rhythm_properties.rhythm_isStruck[1] = true;
+    current_rhythmic_properties.tempo_isStruck[1] = true;
     snare.start();
   }
   if(keyIsPressed == true && key == 'd' && hihat.state=="stopped")
   {
-    current_rhythm_properties.rhythm_isStruck[2] = true;
+    current_rhythmic_properties.tempo_isStruck[2] = true;
     hihat.start();
   }
   if(keyIsPressed == true && key == 'w' && oh.state=="stopped")
   {
-    current_rhythm_properties.rhythm_isStruck[3] = true;
+    current_rhythmic_properties.tempo_isStruck[3] = true;
     oh.start();
   }
 }
@@ -87,7 +87,7 @@ function first_rhythm_pulsate(console_message)
     console.log("terminating animation")
     flag_animation = false;
     // Set the flag back to false
-    current_rhythm_properties.rhythm_isStruck[0] = false;
+    current_rhythmic_properties.tempo_isStruck[0] = false;
   }
   if(flag_animation==true)
   {
@@ -115,7 +115,7 @@ function second_rhythm_pulsate(console_message)
   {
     console.log("terminating animation")
     flag_animation1 = false;
-    current_rhythm_properties.rhythm_isStruck[1] = false;
+    current_rhythmic_properties.tempo_isStruck[1] = false;
   }
   if(flag_animation1==true)
   {
@@ -143,7 +143,7 @@ function third_rhythm_pulsate(console_message)
   {
     console.log("terminating animation")
     flag_animation2 = false;
-    current_rhythm_properties.rhythm_isStruck[2] = false;
+    current_rhythmic_properties.tempo_isStruck[2] = false;
   }
   if(flag_animation2==true)
   {
@@ -171,7 +171,7 @@ function first_rhythm_pulsate_jitter_firstHalf(console_message)
   {
     console.log("terminating animation")
     flag_animation = false;
-    current_rhythm_properties.rhythm_isStruck[0] = false;
+    current_rhythmic_properties.tempo_isStruck[0] = false;
   }
   if(flag_animation==true)
   {
@@ -205,7 +205,7 @@ function first_rhythm_pulsate_jitter_secondHalf(console_message)
   {
     console.log("terminating animation")
     flag_animation = false;
-    current_rhythm_properties.rhythm_isStruck[0] = false;
+    current_rhythmic_properties.tempo_isStruck[0] = false;
   }
   if(flag_animation==true)
   {
@@ -239,7 +239,7 @@ function second_rhythm_jitter(console_message)
   {
     console.log("terminating animation")
     flag_animation1 = false;
-    current_rhythm_properties.rhythm_isStruck[1] = false;
+    current_rhythmic_properties.tempo_isStruck[1] = false;
   }
   if(flag_animation1==true)
   {
@@ -273,7 +273,7 @@ function third_rhythm_shift_dimension(console_message)
   {
     console.log("terminating animation")
      flag_animation2 = false;
-     current_rhythm_properties.rhythm_isStruck[2] = false;
+     current_rhythmic_properties.tempo_isStruck[2] = false;
    }
    if(flag_animation2==true)
    {
@@ -304,7 +304,7 @@ function fourth_rhythm_pulsate(console_message)
   {
     console.log("terminating animation")
     flag_animation3 = false;
-    current_rhythm_properties.rhythm_isStruck[3] = false;
+    current_rhythmic_properties.tempo_isStruck[3] = false;
   }
   if(flag_animation3==true)
   {
@@ -335,15 +335,15 @@ function fourth_rhythm_pulsate(console_message)
  ***********************************                        ***********************+*************
  ************************************************************************************************/
 
-// The rhythm_properties class contains the up-to-date rhythmic information of the piece.
+// The RhythmicProperties class contains the up-to-date rhythmic information of the piece.
 // The updates are monitored by the loop of the draw() function.
 // The updates are scheduled with the Tone.Transport.Schedule() function.
-class rhythm_properties
+class RhythmicProperties
 {
   constructor()
   {
-    this.n_rhythms = 0;
-    this.rhythm_isStruck =
+    this.n_tempos = 0;
+    this.tempo_isStruck =
       [
         false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
         false, false, false, false, // except in the instant when the corresponding rhythm is struck.
@@ -357,7 +357,7 @@ class rhythm_properties
         "ffffff", "ffffff", "ffffff", "ffffff",
         "ffffff", "ffffff", "ffffff", "ffffff",
       ];
-    this.rhythm_isFast =
+    this.tempo_isFast =
       [
         false, false, false, false, // Array containing a boolean for each rhythm.
         false, false, false, false, // Each flag tells us if rhythm is fast, i.e. above a certain BPM threshold.
@@ -368,11 +368,11 @@ class rhythm_properties
   }
 
   // Assign a color of the palette to a rhythm
-  bind_rhythms_to_colors(palette_cold, palette_warm)
+  bind_tempos_to_colors(palette_cold, palette_warm)
   {
-    for(i in this.n_rhythms)
+    for(i in this.n_tempos)
     {
-      if(this.rhythm_isFast[i])
+      if(this.tempo_isFast[i])
       {
         this.rhythm_colors[i] = palette_cold[i];
       }
@@ -385,22 +385,22 @@ class rhythm_properties
 
   update(args)
   {
-    // Update the number of rhythms only if it's a different value
-    if (this.n_rhythms != args._n_rhythms)
+    // Update the number of tempos only if it's a different value
+    if (this.n_tempos != args._n_tempos)
     {
-      this.n_rhythms = args._n_rhythms;
-      console.log(this.n_rhythms)
+      this.n_tempos = args._n_tempos;
+      console.log(this.n_tempos)
     }
-    // Trigger the rhythm which has been struck
-    this.rhythm_isStruck[args._struck_rhythm_idx] = true;
+    // Trigger the tempo which has been struck
+    this.tempo_isStruck[args._struck_rhythm_idx] = true;
   }
 
   reset_flags()
   {
-    this.rhythm_isStruck =
+    this.tempo_isStruck =
       [
-        false, false, false, false, // Array containing a boolean for each rhythm. Each element is always false,
-        false, false, false, false, // except in the instant when the corresponding rhythm is struck.
+        false, false, false, false, // Array containing a boolean for each tempo. Each element is always false,
+        false, false, false, false, // except in the instant when the corresponding tempo is struck.
         false, false, false, false,
         false, false, false, false,
       ];
@@ -408,7 +408,7 @@ class rhythm_properties
 
   print()
   {
-    console.log("n_rhythms: ", this.n_rhythms, " rhythm_isStruck: ", this.rhythm_isStruck);
+    console.log("n_tempos: ", this.n_tempos, " tempo_isStruck: ", this.tempo_isStruck);
   }
 };
 
@@ -728,7 +728,7 @@ class MondrianBlocks
 let mySound; // Stores the audio track
 let rhythmic_content; // Stores the rhythmic content of the audio track, loaded from the JSON file
 let n_windows; // Number of windows in mySound, each window contains different tempos
-let current_rhythm_properties = new rhythm_properties(); // Instantiation of the rhythm_properties class
+let current_rhythmic_properties = new RhythmicProperties(); // Instantiation of the RhythmicProperties class
 let kick, snare, hihat, oh; // Stores the sounds of drum kit
 
 const color_pulse_to = "#ffffff"; // Target color for the pulse animation
@@ -842,10 +842,10 @@ function setup()
     let window_len = window_end - window_start; // Length of the window (seconds)
 
     let window_content = rhythmic_content.window_content[i]; // Information about the rhythms in the i-th window
-    let n_rhythms = window_content.length; // Number of rhythms present in the i-th window
+    let n_tempos = window_content.length; // Number of rhythms present in the i-th window
 
     console.log("window start: ", window_start, ", window end: ", window_end,
-      ", window length: ", window_len, ", n_rhythms: ", n_rhythms);
+      ", window length: ", window_len, ", n_tempos: ", n_tempos);
 
     // ... for each rhythm inside the window ...
     for (j in window_content)
@@ -867,15 +867,15 @@ function setup()
       {
         // ... add the cue. We can also pass many arguments to the callback function.
         console.log("Adding cue marker at position ", current_cue, ", j: ", j)
-        let args = { _struck_rhythm_idx: j, _n_rhythms: n_rhythms }
-        Tone.Transport.schedule(function () { current_rhythm_properties.update(args) }, current_cue);
+        let args = { _struck_rhythm_idx: j, _n_tempos: n_tempos }
+        Tone.Transport.schedule(function () { current_rhythmic_properties.update(args) }, current_cue);
         // Fallback code below. Please, leave commented.
-        /*Tone.Transport.schedule(function({current_cue, j, n_rhythms})
+        /*Tone.Transport.schedule(function({current_cue, j, n_tempos})
                                   {
-                                    current_rhythm_properties.n_rhythms=n_rhythms;
-                                    current_rhythm_properties.rhythm_isStruck[j]=true;
+                                    current_rhythmic_properties.n_tempos=n_tempos;
+                                    current_rhythmic_properties.tempo_isStruck[j]=true;
                                     console.log("cue callback at time ", current_cue);
-                                  },{current_cue, j, n_rhythms});*/
+                                  },{current_cue, j, n_tempos});*/
       }
       console.log("\n")
     }
@@ -906,7 +906,7 @@ function draw()
 
   handle_keypress_controller();
 
-  if (current_rhythm_properties.n_rhythms == 0)
+  if (current_rhythmic_properties.n_tempos == 0)
   {
     //clear();
   }
@@ -914,48 +914,48 @@ function draw()
   else
   {
     // ONE RHYTHM
-    if (current_rhythm_properties.n_rhythms == 1)
+    if (current_rhythmic_properties.n_tempos == 1)
     {
       // Check if the rhythm has been struck      
-      if (current_rhythm_properties.rhythm_isStruck[0] == true)
+      if (current_rhythmic_properties.tempo_isStruck[0] == true)
       {
         first_rhythm_pulsate("RHYTHM 1/1 STRUCK");
       }      
     }
 
     // TWO RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 2)
+    else if (current_rhythmic_properties.n_tempos == 2)
     {
       // If only the first rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true)
+      if (current_rhythmic_properties.tempo_isStruck[0] == true)
       {
         first_rhythm_pulsate("RHYTHM 1/2 STRUCK");
       }
 
       // If only the second rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[1] == true)
+      if (current_rhythmic_properties.tempo_isStruck[1] == true)
       {
         second_rhythm_pulsate("RHYTHM 2/2 STRUCK");
       }
     }
 
     // THREE RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 3)
+    else if (current_rhythmic_properties.n_tempos == 3)
     {
       // If only the first rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true)
+      if (current_rhythmic_properties.tempo_isStruck[0] == true)
       {
         first_rhythm_pulsate("RHYTHM 1/3 STRUCK");
       }
 
       // If only the second rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[1] == true)
+      if (current_rhythmic_properties.tempo_isStruck[1] == true)
       {
         second_rhythm_pulsate("RHYTHM 2/3 STRUCK");
       }
 
       // If only the third rhythm has been struck...
-      if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      if (current_rhythmic_properties.tempo_isStruck[2] == true)
       {
         third_rhythm_pulsate("RHYTHM 3/3 STRUCK")
       }
@@ -963,34 +963,34 @@ function draw()
 
 
     // FOUR RHYTHMS
-    else if (current_rhythm_properties.n_rhythms == 4)
+    else if (current_rhythmic_properties.n_tempos == 4)
     {
       // If only the first rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[0] == true && switch_pulse == false)
+      if (current_rhythmic_properties.tempo_isStruck[0] == true && switch_pulse == false)
       {
         // First half of the pulsation
         first_rhythm_pulsate_jitter_firstHalf("RHYTHM 1/4 STRUCK");      
       }
-      else if(current_rhythm_properties.rhythm_isStruck[0] == true && switch_pulse == true)
+      else if(current_rhythmic_properties.tempo_isStruck[0] == true && switch_pulse == true)
       {
         // Second half of the pulsation
         first_rhythm_pulsate_jitter_secondHalf("RHYTHM 1/4 STRUCK");
       }
 
       // If only the second rhythm has been struck ...
-      if (current_rhythm_properties.rhythm_isStruck[1] == true)
+      if (current_rhythmic_properties.tempo_isStruck[1] == true)
       {
         second_rhythm_jitter("RHYTHM 2/4 STRUCK");
       }
 
       // If only the third rhythm has been struck...
-      if (current_rhythm_properties.rhythm_isStruck[2] == true)
+      if (current_rhythmic_properties.tempo_isStruck[2] == true)
       {
         third_rhythm_shift_dimension("RHYTHM 3/4 STRUCK");
       }
 
       // If only the fourth rhythm has been struck...
-      if (current_rhythm_properties.rhythm_isStruck[3] == true)
+      if (current_rhythmic_properties.tempo_isStruck[3] == true)
       {
         fourth_rhythm_pulsate("RHYTHM 4/4 STRUCK");
       }
