@@ -6,7 +6,8 @@ The goal of Synesthetic is to create a colorful and dynamic visual representatio
 
 ## How does this "colorful representation" actually look?
 
-We chose to take inspiration from the famouse painter Piet Mondrian. We imagined our representation as a Mondrian-like composition which reacts to the rhythmic events by vibrating, pulsating in color, and so on. We prepared a demo which shows you the representation based on drum track of "Sound of Muzak" by Porcupine Tree.
+We chose to take inspiration from the famouse painter Piet Mondrian. We imagined our representation as a Mondrian-like composition which reacts to the rhythmic events by vibrating, pulsating in color, and so on. We prepared a demo which shows you the representation based on drum track of "Sound of Muzak" by Porcupine Tree.   
+
 [![](http://img.youtube.com/vi/CIWOzm0pQt0/0.jpg)](http://www.youtube.com/watch?v=CIWOzm0pQt0 "")
 
 
