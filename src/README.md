@@ -84,6 +84,7 @@ class RhythmicProperties
 }
 ```
 4. The Mondrian-like composition is generated with the help of the ```MondrianBlocks``` class   
+
 After the setup phase, the program to enter into the main loop, which is the ```draw()``` function. The loop does the following:   
 1. Check the current number of tempos 
 2. Check which tempo has been struck
