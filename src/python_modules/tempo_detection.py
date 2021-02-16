@@ -259,12 +259,20 @@ def driver_function(audio_filename, json_filename, window_len_seconds=10, verbos
 
     # Append them to the data structure
     if verbose == True: print("Number of periodicities found in window [%i]: %i" %(window_ctr, len(periods)) )
-    for period in periods[0:4]:
-      if verbose == True: print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
-      current_periodicity_BPM = 60/((period[0]*(Fs/Fs_nov_y))/Fs)
-      current_periodicity_offset_sec = (period[1]*(Fs/Fs_nov_y))/Fs
-      rhythmDict["window_content"][window_ctr].append({"BPM":current_periodicity_BPM, "offset":current_periodicity_offset_sec})
-    if verbose == True: print("\n")
+    if len(periods) >= 4:
+      for period in periods[0:4]:
+        if verbose == True: print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
+        current_periodicity_BPM = 60/((period[0]*(Fs/Fs_nov_y))/Fs)
+        current_periodicity_offset_sec = (period[1]*(Fs/Fs_nov_y))/Fs
+        rhythmDict["window_content"][window_ctr].append({"BPM":current_periodicity_BPM, "offset":current_periodicity_offset_sec})
+      if verbose == True: print("\n")
+    else:
+      for period in periods:
+        if verbose == True: print("periodicity_len: %i, periodicity_offset: %i, periodicity_consecutive_counts: %i" % (period[0], period[1], period[2]) )
+        current_periodicity_BPM = 60/((period[0]*(Fs/Fs_nov_y))/Fs)
+        current_periodicity_offset_sec = (period[1]*(Fs/Fs_nov_y))/Fs
+        rhythmDict["window_content"][window_ctr].append({"BPM":current_periodicity_BPM, "offset":current_periodicity_offset_sec})
+      if verbose == True: print("\n")
 
   rhythmDict["n_windows"] = window_ctr+1
 

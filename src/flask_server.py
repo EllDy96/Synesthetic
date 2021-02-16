@@ -1,5 +1,5 @@
 import os
-#from python_modules import tempo_detection as td
+from python_modules import tempo_detection as td
 from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -28,7 +28,7 @@ def upload_file():
       uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], renamed_filename)) #salva il file nel path specificato in app.config (deve esistere una cartella con quel nome)
 
    track_path = os.path.join(app.config['UPLOAD_PATH'], renamed_filename)
-   #td.driver_function(track_path, 'static/assets/rhythm_file.json')
+   td.driver_function(track_path, 'static/assets/rhythm_file.json')
 
    return render_template('mondrian_animation.html')
 
