@@ -1,3 +1,3 @@
 # References
 
-This folder contains the main references of the libraries and APIs used during the project.
+This folder contains references to some of the libraries and APIs used during the project.
