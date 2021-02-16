@@ -1,25 +1,61 @@
-# How to run Synesthetic
+# Welcome to the source code of Synesthetic
 
-## Server instantiation 
+## How to start Synesthetic
 
-From a bash terminal, run the command:
+Clone this repository or download it manually From a bash terminal, then ```cd``` yourself inside the ```src/``` folder. Run the command to instantiate the Flask server:
 
 ```bash
 $ env FLASK_APP=flask_server.py flask run
 ```
 
-Expected output:
+The expected output is:
 
 ```bash
  * Serving Flask app "flask_server"
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
  ```
+ 
+If the server complains about missing Python dependencies, Synesthetic won't be able to start please install them with the ```pip3 dependency_name``` command in order to proceed. Once the server is started, you can navigate to the IP address given by the terminal.
 
- 1) activate Flask environment (if you use conda)
- 2) run "flask_server.py"
- 3) select a track to upload from your pc
- 4) you will be redirect to the oscillator
- 5) write "/metronomo" in the search bar in order to see a metronome @ 60 BPM
+## How do the backend and fronted interact
+
+Flask is responsible for the interaction between the Python backend and the Javascript frontend. When Synesthetic starts, the user is greeted by a landing page which requires him to upload an audio track. After the track is loaded, the rhythmic analysis is performed. The result of the rhythmic analysis is then stored into a JSON file which looks something like this:
+
+```javascript
+{
+    "n_windows": 2,
+    "window_timings": [
+        {
+            "start": 0.0,
+            "end": 10
+        },
+        {
+            "start": 10.0,
+            "end": 20.0
+        }
+    ],
+    "window_content": [
+        [
+            {
+                "BPM": 184.57,
+                "offset": 0.31
+            }
+        ],
+        [
+            {
+                "BPM": 191.40,
+                "offset": 0.22
+            },
+            {
+                "BPM": 53.83,
+                "offset": 0.84
+            }
+        ]
+    ]
+}  
+```
+The rhythmic analysis is performed on non-overlapping windows of the audio track. The windows are delimited by the ```start``` and ```end``` timings, contained in the ```window_timings``` array, and are expressed in seconds. Each window has a corresponding element inside the ```window_content``` array, which contains the information about all the tempos that show up inside that window. The frequency of the tempos is expressed in beats per minute and the offset is expressed in seconds. In this way, we take into account the possibility that each window can contain a different number of tempos.
+
 
 ## Reference list:
 * file uploads with Flask  
