@@ -803,7 +803,7 @@ let pulse_speed_d = 0.05
 function preload()
 {
   loadJSON('static/assets/rhythm_file.json', storeJSON);
-  mySound = new Tone.Player("static/assets/muzak_drums.wav").toDestination();
+  mySound = new Tone.Player("static/assets/uploaded_track.wav").toDestination();
   //upload drum sounds
   kick = new Tone.Player("static/assets/Synesthetic_drums/kick_DM.wav").toDestination();
   snare = new Tone.Player('static/assets/Synesthetic_drums/snare.wav').toDestination();
