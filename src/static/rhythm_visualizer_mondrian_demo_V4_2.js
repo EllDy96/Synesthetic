@@ -116,7 +116,7 @@ class Block {
     this.animatedRectWidth = 0;
     this.animatedRectHeight = 0
     this.transparencyRange = 0;
-    this.blendedColor = '#ffffff';
+    this.colorShape = '#ffffff';
 
   }
   display(_color) //specific for pulsation of color
@@ -143,15 +143,14 @@ class Block {
   circleFill() {
     if (circleFillOn) {
       noStroke();
-
       //this.blendedColor = lerpColor(this.color, color("#2f984f"), color_blend_coefficient);
-      let colorShape = color("#2f984f").setAlpha(255 - 225 * this.transparencyRange);
-      fill(colorShape);
+      //this.colorShape = color("#2f984f").setAlpha(255 - 225 * this.transparencyRange);
+      fill("#2f984f");
       rect(this.x, this.y, this.animatedRectWidth, this.animatedRectHeight);
 
       if (this.transparencyRange < 1) {
         this.transparencyRange += 0.01;
-
+        console.log("questo è il transparencyùrange ", this.transparencyRange )
         if (this.animatedRectHeight < this.dim1) {
           this.animatedRectHeight += 2;
         }
@@ -161,10 +160,11 @@ class Block {
         }
 
       } else {
+        console.log("Animazione circleFill terminata")
         circleFillOn = !circleFillOn //end of the animation
         this.transparencyRange = 0;
-        this.ellipseHeight = 0;
-        this.ellipseWidth = 0;
+        this.animatedRectHeight = 0;
+        this.animatedRectWidthd = 0;
       }
     }
 
@@ -485,11 +485,11 @@ function storeJSON(data) {
 function setup() {
   // SET THE TARGET FPS
   frameRate(60);
-  mySound.sync().start(0);
+  //mySound.sync().start(0);
   // INITIALIZE THE CANVAS
   createCanvas(windowHeight, windowHeight);
-  background(255)
-  rectMode(CENTER)
+  background(255);
+  rectMode(CENTER);
   mondrian_blocks = new MondrianBlocks(10, height, width, sizes, color_palette_warm, color_palette_cold);
   mondrian_blocks.generate_mondrian_from_center(); // generate the blocks
   mondrian_blocks.assign_colors_to_blocks(); // assign a color to every block
@@ -560,9 +560,15 @@ function setup() {
  ************************************************************************************************/
 
 function draw() {
-  for (let block of mondrian_blocks.blocks) {
-    block.circleFill();
+//   for (const block in  mondrian_blocks.blocks) {
+//     block.circleFill();
+//   }
+
+  
+  for (let i in mondrian_blocks.blocks) {
+    mondrian_blocks.blocks[i].circleFill();
   }
+  
   // Recalculate the coefficients
   color_shift_coefficient = sin(s) * sin(s) //variable that is passed to lerpColor, defines the color variation aka pulsation
   color_shift_coefficient1 = sin(s1) * sin(s1)
@@ -925,7 +931,7 @@ function draw() {
  ************************************************************************************************/
 
 const btnPlay = document.querySelector("#btn-play");
-btnPlay.addEventListener("click", play);
+btnPlay.addEventListener("click", start);
 
 const btnStop = document.querySelector("#btn-stop");
 btnStop.addEventListener("click", stop);
@@ -934,20 +940,21 @@ const btnPause = document.querySelector("#btn-pause");
 btnStop.addEventListener("click", pause);
 
 function pause() {
-  if (mySound.state == "started") {
-    Tone.Transport.pause();
-  } else if (mySound.state == "stopped") {
-    Tone.Transport.start();
-  }
+  // if (mySound.state == "started") {
+  //   Tone.Transport.pause();
+  // } else if (mySound.state == "stopped") {
+  //   Tone.Transport.start();
+  // }
   // mySound.play()
   // Tone.Transport.play()
 }
 function start(){
-  Tone.Transport.start();
   mySound.start();
+  Tone.Transport.start();
+  
 }
 
-// function stop() {
-//   // mySound.stop();
-//   Tone.Transport.stop();
-// }
+function stop() {
+  mySound.stop();
+  Tone.Transport.stop();
+}
