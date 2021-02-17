@@ -58,7 +58,7 @@ Flask is responsible for the interaction between the Python backend and the Java
     ]
 }  
 ```
-The rhythmic analysis is performed on non-overlapping windows of the audio track. The windows are delimited by the ```start``` and ```end``` timings, contained in the ```window_timings``` array, and are expressed in seconds. Each window has a corresponding element inside the ```window_content``` array, which contains the information about all the tempos that show up inside that window. The frequency of the tempos is expressed in beats per minute and the offset is expressed in seconds. This way, we take into account the possibility that each window can contain a different number of tempos.
+The rhythmic analysis is performed on non-overlapping windows of the audio track. The windows are delimited by the ```start``` and ```end``` timings, contained in the ```window_timings``` array, and are expressed in seconds. Each window has a corresponding element inside the ```window_content``` array, which contains the information about all the tempos that show up inside that window. The frequency of the tempos is expressed in BPM (beats per minute) and the offset is expressed in seconds. The offset is relative to the ```start``` value of the window. With this data structure, we're able to take into account the possibility that each window can contain a different number of tempos.
 
 
 ## How do you perform the rhythmic analysis?
@@ -101,7 +101,7 @@ Long answer: you already know that, in case of a user track, the updates of the 
 In order to give you an idea of what would it be like, we created a demo implementation of this feature. Follow these steps:
 1. Fire up Synesthetic
 2. Open up the Javascript console in your browser and type in the command ```current_rhythmic_properties.n_tempos = 4```
-3. Try pressing the W, A, S and D keys on your keyboard. Each keypress will trigger both a drumkit sound and a corresponding animation
+3. Try pressing the ```W```, ```A```, ```S``` and ```D``` keys on your keyboard. Each keypress will trigger both a drumkit sound and a corresponding animation
 
 ## I'm not really a Mondrian fan. How do I create different representation?
 
