@@ -21,7 +21,7 @@ pip3 dependency_name
 ```
 command in order to proceed. Once the server is started, open up your browser and navigate to the IP address written in the terminal. You should be redirected to the lading page of Synesthetic:   
 
-[Synesthetic's landing page](../doc/img/landing_page.png)
+![Screenshot](../doc/img/landing_page.png)
 
 ## How do the backend and fronted interact?
 
