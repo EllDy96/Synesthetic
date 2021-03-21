@@ -20,4 +20,4 @@ The code of Synesthetic is divided into two main parts:
 Python and Javascript are integrated using Flask, which instantiates a web server (see https://flask.palletsprojects.com/en/1.1.x/installation/ and https://palletsprojects.com/p/flask/)
 
 ## How to run Synesthetic / I want to know more details about the code!
-To run synesthetic, you'll have to instantiate the Flask server, either locally or on a server. Please follow the instructions located in the README of the src/ folder. The README also contains further details of the implementation, to make your journey through the code easier.
+To run synesthetic, you'll have to instantiate the Flask server, either locally or on a server. Please follow the instructions located in the README of the [source folder](src/). The README also contains further details of the implementation, to make your journey through the code easier.
