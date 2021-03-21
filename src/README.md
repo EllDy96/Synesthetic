@@ -71,13 +71,13 @@ The rhythmic analysis is based on the idea of finding the minimum number of peri
 ## Do you really need a backend? Why don't you just move everything to the frontend?
 
 There are some key reasons that keep the backend and frontend separated.
-1. **Ease of development**. Python, with its data structures, audio libraries and scientific libraris, offers so much flexibility for the development of signal processing modules. In our case, we created a module that analyzes the rhythmic properties of an audio track; therefore, it was fundamental to plot and listen to intermediate results. This enabled us to test in an appropriate way our algorithms and to create example inputs with corner cases.
+1. **Ease of development**. Python, with its data structures, audio libraries and scientific libraries, offers so much flexibility for the development of signal processing modules. In our case, we created a module that analyzes the rhythmic properties of an audio track; therefore, it was fundamental to plot and listen to intermediate results. This enabled us to test in an appropriate way our algorithms and to create example inputs with corner cases.
 2. **Scalability**. As of now, the backend performs a rhythmic analysis of the audio track thanks to the functions implemented in the module [python_modules/tempo_detection.py](python_modules/tempo_detection.py). However, in the future, other types of analysis could be performed (i.e. harmonic, melodic) in separate modules. A modular Python backend makes the project more scalable, beacause each module contains separate functionalities.
 3. **Better client performance**. Music information retrieval tasks can be computationally intensive. We didn't want to penalize the user experience by making the user wait too long for the result of the audio track analysis. Therefore, the information retrieval has to be performed on the server. Another reason is that Python lets us call functions implemented in C, which enables us to remove some bottlenecks when Python runs too slow:
 ![Screenshot](../doc/img/slowest_things.jpeg)   
 *Turtles are slow. But Python too. [Image source](https://medium.com/@trungluongquang/why-python-is-popular-despite-being-super-slow-83a8320412a9)*
 
-That being said, it would be hypothetically possible to move everything to the frontend. That would require rewriting the Python analysis modules in JavaScript. As an alternative, there some solutions that enable Python code to be called from Javascript, but... it's very sketchy and complicated. We think that the heavy lifting has to be done on the server side.
+That being said, it would be hypothetically possible to move everything to the frontend. That would require rewriting the Python analysis modules in JavaScript. As an alternative, there some solutions that enable Python code to be called from Javascript, but... it's very sketchy and complicated. We think that the heavy lifting (turtle lifting, you may say) has to be done on the server side.
 
 
 ## How does the frontend generate the representation? How are the animations triggered?
