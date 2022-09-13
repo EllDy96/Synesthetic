@@ -2,7 +2,7 @@
 
 ## What is Synesthetic?
 
-The goal of Synesthetic is to create a colorful and dynamic visual representation of a rhythmic musical piece. The user is required to upload an audio file containing of a rhythmic recording, e.g. a drum recording. A rhythmic analysis then is performed on the track, which separates the contributions of the different periodicities present in the rhythm, so that each periodicity can give a separate contribution to the visualization. This makes Synesthetic an informative tool for rhythm visualization. We encourage the user to upload polyrhythmic and polymetric tracks for a more interesting visual experience.
+The goal of Synesthetic is to create a Mondrian like colorful and dynamic visual representation of a rhythmic musical piece. The user is required to upload an audio file containing of a rhythmic recording, e.g. a drum recording. A rhythmic analysis then is performed on the track, which separates the contributions of the different periodicities present in the rhythm, so that each periodicity can give a separate contribution to the visualization. This makes Synesthetic an informative tool for rhythm visualization. We encourage the user to upload polyrhythmic and polymetric tracks for a more interesting visual experience.
 
 ## How does this "colorful representation" actually look?
 
